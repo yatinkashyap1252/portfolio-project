@@ -29,7 +29,7 @@ const projectSchema = new Schema<IProject>(
     },
     thumbnailUrl: {
       type: String,
-      required: true,
+      required: false,
       default: "",
     },
     galleryUrls: {

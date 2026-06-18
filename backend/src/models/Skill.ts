@@ -12,7 +12,6 @@ const skillSchema = new Schema<ISkill>(
     category: {
       type: String,
       required: true,
-      enum: ["frontend", "backend", "state", "devops", "other"],
     },
     proficiency: {
       type: Number,

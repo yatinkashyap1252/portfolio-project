@@ -34,32 +34,31 @@ export default function ShowcaseSection() {
   const [items, setItems] = useState<ShowcaseItem[]>(showcaseItems);
 
   useEffect(() => {
-    async function loadCertificates() {
-      const certs = await fetchAPI<any[]>("/cms/certificates");
-      if (certs && certs.length > 0) {
-        const bgStyles: Array<"white" | "black" | "red" | "dark" | "split"> = ["white", "split", "dark"];
-        const mappedCerts = certs.map((cert: any, idx: number) => ({
-          id: cert._id || `cert-${idx}`,
-          type: "certificate" as const,
-          title: cert.name,
-          subtitle: cert.issuer,
-          content: [
-            `Issuer: ${cert.issuer}`,
-            `Certified in ${cert.date}`,
-            cert.credentialUrl ? `Verification: ${cert.credentialUrl.substring(0, 30)}...` : ""
-          ].filter(Boolean),
-          link: cert.credentialUrl || "#",
-          linkLabel: "Verify Credential",
-          badgeText: cert.issuer.split(" ")[0].toUpperCase(),
-          bgStyle: bgStyles[idx % bgStyles.length],
-        }));
-
-        const nonCerts = showcaseItems.filter((item) => item.type !== "certificate");
-        // Keep certificates first as in the original layout
-        setItems([...mappedCerts, ...nonCerts]);
+    async function loadShowcase() {
+      try {
+        const showcaseData = await fetchAPI<any[]>("/cms/showcase");
+        if (showcaseData && showcaseData.length > 0) {
+          const mapped = showcaseData.map((item) => ({
+            id: item._id,
+            type: item.type,
+            title: item.title,
+            subtitle: item.subtitle,
+            content: item.content || [],
+            link: item.link,
+            linkLabel: item.linkLabel,
+            badgeText: item.badgeText,
+            bgStyle: item.bgStyle || "white",
+            imageUrl: item.imageUrl,
+          }));
+          setItems(mapped);
+        } else {
+          setItems(showcaseItems);
+        }
+      } catch (err) {
+        console.error("Error loading showcase from CMS:", err);
       }
     }
-    loadCertificates();
+    loadShowcase();
   }, []);
 
   const containerVariants = {
@@ -120,7 +119,11 @@ export default function ShowcaseSection() {
                 >
                   {/* Left Half (Red Visualizer) */}
                   <div className="bg-[#E63925] flex flex-col justify-center items-center p-6 relative">
-                    <CloudLogoVector />
+                    {item.imageUrl ? (
+                      <img src={item.imageUrl} alt={item.title} className="w-16 h-16 object-contain rounded bg-white/10 p-1" />
+                    ) : (
+                      <CloudLogoVector />
+                    )}
                     <span className="absolute bottom-4 left-4 font-mono text-[9px] text-white/80 uppercase tracking-widest">
                       // COMPUTE.
                     </span>
@@ -176,9 +179,14 @@ export default function ShowcaseSection() {
                   </div>
 
                   <div className="space-y-4">
-                    <span className="font-mono text-[9px] font-bold text-zinc-400 bg-zinc-100 border border-zinc-200 rounded px-2.5 py-1 uppercase tracking-widest">
-                      {item.badgeText}
-                    </span>
+                    <div className="flex justify-between items-center">
+                      <span className="font-mono text-[9px] font-bold text-zinc-400 bg-zinc-100 border border-zinc-200 rounded px-2.5 py-1 uppercase tracking-widest">
+                        {item.badgeText}
+                      </span>
+                      {item.imageUrl && (
+                        <img src={item.imageUrl} alt={item.badgeText} className="h-8 w-auto object-contain rounded" />
+                      )}
+                    </div>
                     
                     <h3 className="font-sans font-black text-2xl md:text-3xl tracking-tighter uppercase leading-[0.9] pt-2">
                       {item.title}
@@ -232,9 +240,14 @@ export default function ShowcaseSection() {
                   </div>
 
                   <div className="space-y-4">
-                    <span className="font-mono text-[9px] font-bold text-white/80 bg-white/10 border border-white/20 rounded px-2.5 py-1 uppercase tracking-widest">
-                      {item.badgeText}
-                    </span>
+                    <div className="flex justify-between items-center">
+                      <span className="font-mono text-[9px] font-bold text-white/80 bg-white/10 border border-white/20 rounded px-2.5 py-1 uppercase tracking-widest">
+                        {item.badgeText}
+                      </span>
+                      {item.imageUrl && (
+                        <img src={item.imageUrl} alt={item.badgeText} className="h-8 w-auto object-contain brightness-0 invert rounded" />
+                      )}
+                    </div>
 
                     <h3 className="font-sans font-black text-3xl tracking-tighter uppercase leading-[0.9] pt-2">
                       {item.title}
@@ -278,9 +291,14 @@ export default function ShowcaseSection() {
                   className="bg-zinc-950 text-white p-8 md:p-10 flex flex-col justify-between border-b border-zinc-800 md:border-r last:border-b-0 min-h-[350px] relative group overflow-hidden"
                 >
                   <div className="space-y-4">
-                    <span className="font-mono text-[9px] font-bold text-[#E63925] bg-[#E63925]/10 border border-[#E63925]/20 rounded px-2.5 py-1 uppercase tracking-widest">
-                      {item.badgeText}
-                    </span>
+                    <div className="flex justify-between items-center">
+                      <span className="font-mono text-[9px] font-bold text-[#E63925] bg-[#E63925]/10 border border-[#E63925]/20 rounded px-2.5 py-1 uppercase tracking-widest">
+                        {item.badgeText}
+                      </span>
+                      {item.imageUrl && (
+                        <img src={item.imageUrl} alt={item.badgeText} className="h-8 w-auto object-contain rounded" />
+                      )}
+                    </div>
 
                     <h3 className="font-sans font-black text-2xl tracking-tight uppercase leading-none pt-2">
                       {item.title}
@@ -336,9 +354,14 @@ export default function ShowcaseSection() {
                 className="bg-black text-white p-8 md:p-10 flex flex-col justify-between border-b border-zinc-800 md:border-r last:border-b-0 min-h-[350px] relative group overflow-hidden"
               >
                 <div className="space-y-4">
-                  <span className="font-mono text-[9px] font-bold text-zinc-500 bg-zinc-950 border border-zinc-900 rounded px-2.5 py-1 uppercase tracking-widest">
-                    {item.badgeText}
-                  </span>
+                  <div className="flex justify-between items-center">
+                    <span className="font-mono text-[9px] font-bold text-zinc-500 bg-zinc-950 border border-zinc-900 rounded px-2.5 py-1 uppercase tracking-widest">
+                      {item.badgeText}
+                    </span>
+                    {item.imageUrl && (
+                      <img src={item.imageUrl} alt={item.badgeText} className="h-8 w-auto object-contain rounded" />
+                    )}
+                  </div>
 
                   <h3 className="font-sans font-black text-2xl tracking-tight uppercase leading-none pt-2">
                     {item.title}

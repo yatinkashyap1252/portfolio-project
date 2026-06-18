@@ -25,15 +25,24 @@ type ContactFormData = z.infer<typeof contactSchema>;
 export default function ContactSection() {
   const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
   const [email, setEmail] = useState(heroData.email);
+  const [resumeUrl, setResumeUrl] = useState("/resume.pdf");
 
   useEffect(() => {
-    async function loadContactEmail() {
-      const contact = await fetchAPI<any>("/cms/contact");
-      if (contact && contact.email) {
-        setEmail(contact.email);
+    async function loadContactAndHero() {
+      try {
+        const contact = await fetchAPI<any>("/cms/contact");
+        if (contact && contact.email) {
+          setEmail(contact.email);
+        }
+        const hero = await fetchAPI<any>("/cms/hero");
+        if (hero && hero.resumeUrl) {
+          setResumeUrl(hero.resumeUrl);
+        }
+      } catch (err) {
+        console.error("Error loading contact and hero details:", err);
       }
     }
-    loadContactEmail();
+    loadContactAndHero();
   }, []);
 
   const {
@@ -116,8 +125,8 @@ export default function ContactSection() {
           <motion.div variants={itemVariants} className="relative z-10 pt-8 pl-0 xl:pl-6">
             {/* Download Resume pill button matching theme */}
             <a
-              href="/resume.pdf"
-              download
+              href={resumeUrl}
+              download="resume"
               className="inline-flex items-center justify-between gap-6 px-6 py-4 rounded-full bg-[#E63925] text-white font-mono text-xs uppercase tracking-widest hover:bg-[#F34D3A] transition-all duration-300 shadow-md shadow-[#E63925]/20 group w-full max-w-[280px]"
             >
               <span className="flex items-center gap-2">
@@ -169,7 +178,7 @@ export default function ContactSection() {
                     <input
                       id="name"
                       type="text"
-                      placeholder="Robert william"
+                      placeholder="Yatin Kashyap"
                       {...register("name")}
                       className={`w-full px-4 py-3 bg-[#0E0E0E] border rounded-lg font-mono text-xs text-white placeholder-zinc-700 transition-all duration-200 outline-none
                         ${errors.name ? "border-[#E63925] focus:ring-1 focus:ring-[#E63925]/30" : "border-zinc-900 focus:border-[#E63925]/80"}

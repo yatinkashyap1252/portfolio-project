@@ -6,6 +6,8 @@ import ProjectsSection from "@/components/sections/ProjectsSection";
 import ShowcaseSection from "@/components/sections/ShowcaseSection";
 import ContactSection from "@/components/sections/ContactSection";
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-black flex flex-col justify-start">

@@ -48,8 +48,8 @@ app.use(
 );
 
 // Body and Cookie Parsers
-app.use(express.json({ limit: "10kb" })); // Limit body sizes to prevent DoS
-app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+app.use(express.json({ limit: "10mb" })); // Limit body sizes to prevent DoS for large base64 uploads
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 
 // Custom Security Middleware Filters

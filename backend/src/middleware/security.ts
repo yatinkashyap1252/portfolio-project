@@ -26,13 +26,17 @@ const sanitizeMongo = (obj: any): any => {
  */
 const sanitizeXSS = (obj: any): any => {
   if (typeof obj === "string") {
+    // Bypass XSS sanitization for base64 data URLs to avoid corrupting binary image data
+    if (obj.startsWith("data:")) {
+      return obj;
+    }
+    // Escape standard HTML injection characters, excluding forward slash to keep URLs intact
     return obj
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#x27;")
-      .replace(/\//g, "&#x2F;");
+      .replace(/'/g, "&#x27;");
   } else if (obj instanceof Array) {
     return obj.map((item) => sanitizeXSS(item));
   } else if (obj !== null && typeof obj === "object") {

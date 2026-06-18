@@ -8,52 +8,94 @@ export interface ProjectItem {
   liveUrl: string | null;
   status: string;
   index: string;
+  thumbnailUrl?: string;
 }
 
 export const projectsData: ProjectItem[] = [
   {
-    id: "neos-crypto",
-    title: "Neos Crypto Analytics Dashboard",
-    description: "A high-fidelity real-time crypto sentiment analytics and automated trading dashboard. It integrates WebSocket sockets to capture market triggers and display live trend shifts.",
-    techStack: ["Next.js 15", "TypeScript", "Zustand", "Tailwind CSS", "Framer Motion", "WebSockets"],
-    points: [
-      "Engineered low-latency live chart visualizers using responsive canvas layouts and custom grid rendering.",
-      "Established secure user authorization gateways utilizing stateless JWT validation handshakes.",
-      "Structured dynamic schema state in Zustand to synchronize client-side components with instant database updates."
+    id: "globepath",
+    title: "GlobePath Travel Platform",
+    description:
+      "A comprehensive travel planning and booking platform designed to help users discover destinations, manage itineraries, and streamline trip organization through an intuitive user experience.",
+    techStack: [
+      "React Native",
+      "Firebase",
+      "Gemini API",
+      "Tailwind CSS"
     ],
-    githubUrl: "https://github.com/robertwilliam/neos-crypto-analytics",
-    liveUrl: "https://neos-crypto-analytics.example.com",
-    status: "ACTIVE",
+    points: [
+      "Developed responsive travel management interfaces for destination discovery, itinerary planning, and booking workflows.",
+      "Built scalable backend APIs and database structures to manage travel data, user accounts, and trip information.",
+      "Implemented optimized user experience flows to simplify travel planning and improve customer engagement."
+    ],
+    githubUrl: "https://github.com/yatinkashyap1252/globepath",
+    liveUrl: null,
+    status: "RESEARCH",
     index: "01",
   },
+
   {
-    id: "express-gateway",
-    title: "Express Microservices Gateway API",
-    description: "A secure, scalable API gateway orchestrating internal microservices. Manages high-throughput route mapping, system rate limiting, caching, and consolidated service diagnostic logs.",
-    techStack: ["Node.js", "Express.js", "MongoDB", "Redis Cache", "Docker", "JWT Auth"],
-    points: [
-      "Engineered a dynamic rate-limiting algorithm in Redis, mitigating DDoS overloads by 40% under peak conditions.",
-      "Designed a centralized MongoDB log aggregation database schema to streamline system diagnostics.",
-      "Configured robust Docker container builds to maintain automated local scaling and deployment parameters."
+    id: "safargo",
+    title: "Safargo - Cab Booking",
+    description:
+      "A logistics and transportation management solution focused on shipment tracking, operational monitoring, and business workflow automation.",
+    techStack: [
+      "React Native",
+      "Google Maps API",
+      "Stripe"
     ],
-    githubUrl: "https://github.com/robertwilliam/express-gateway-api",
-    liveUrl: null, // Test case: no live link, button should be hidden
-    status: "DEPLOYED",
+    points: [
+      "Designed and developed logistics dashboards for shipment monitoring, operational insights, and route management.",
+      "Integrated secure authentication and role-based access control to protect business-critical data.",
+      "Optimized backend services and database queries to support efficient handling of transportation operations."
+    ],
+    githubUrl: "https://github.com/yatinkashyap1252/SafarGo",
+    liveUrl: null,
+    status: "COMPLETED",
     index: "02",
   },
+
   {
-    id: "atomic-state",
-    title: "Zustand Atomic State Orchestrator",
-    description: "A lightweight, atomic state management wrapper utility optimized for massive React form bindings. Simplifies nested key state updates and schemas.",
-    techStack: ["TypeScript", "React", "Zustand", "Zod Schema", "npm / CLI"],
-    points: [
-      "Published a reusable npm package supporting multi-level nested form validation resolvers out-of-the-box.",
-      "Optimized rendering pipelines, reducing React component re-render frequency by 70% during typing.",
-      "Built clean TypeScript generic interfaces to ensure strict compile-time types safety across form fields."
+    id: "pixel-fox-maze",
+    title: "Pixel Fox Maze Adventure",
+    description:
+      "A 2D adventure maze game featuring interactive gameplay mechanics, obstacle navigation, collectible systems, and engaging pixel-art environments.",
+    techStack: [
+      "Python",
+      "OpenCV",
+      "Pygame",
+      "Computer Vision"
     ],
-    githubUrl: "https://github.com/robertwilliam/atomic-state-orchestrator",
-    liveUrl: "https://www.npmjs.com/package/atomic-state-orchestrator",
-    status: "PUBLISHED",
+    points: [
+      "Developed core gameplay mechanics including player movement, maze navigation, and interactive obstacle systems.",
+      "Implemented collectible rewards, level progression, and collision-based game logic to enhance engagement.",
+      "Designed optimized game environments and responsive controls for a smooth player experience."
+    ],
+    githubUrl: "https://github.com/yatinkashyap1252/Pixel_Maze_Adventure",
+    liveUrl: null,
+    status: "COMPLETED",
     index: "03",
+  },
+
+  {
+    id: "ai-blind-assistant",
+    title: "AI Blind Assistant System",
+    description:
+      "An AI-powered accessibility solution that assists visually impaired individuals through real-time object detection, voice guidance, and environmental awareness features.",
+    techStack: [
+      "Python",
+      "OpenCV",
+      "YOLO",
+      "Machine Learning",
+      "Computer Vision"
+    ],
+    points: [
+      "Built an object detection system capable of identifying surrounding objects and obstacles in real time.",
+      "Leveraged computer vision and machine learning models to improve environmental awareness and accessibility support."
+    ],
+    githubUrl: "https://github.com/yatinkashyap1252/blind_assistant_bot",
+    liveUrl: null,
+    status: "RESEARCH",
+    index: "04",
   },
 ];

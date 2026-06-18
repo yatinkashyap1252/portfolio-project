@@ -9,6 +9,9 @@ import { Hero } from "../models/Hero";
 import { About } from "../models/About";
 import { Contact } from "../models/Contact";
 import { SEO } from "../models/SEO";
+import { SkillCategoryModel } from "../models/SkillCategory";
+import { Showcase } from "../models/Showcase";
+
 
 // =========================================================================
 // DASHBOARD & LOGS AGGREGATES
@@ -830,3 +833,195 @@ export const updateSEO = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message || "Server Error" });
   }
 };
+
+// =========================================================================
+// SKILL CATEGORIES CRUD
+// =========================================================================
+
+export const getSkillCategories = async (req: Request, res: Response) => {
+  try {
+    const categories = await SkillCategoryModel.find().sort({ displayOrder: 1 });
+    return res.json(categories);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message || "Server Error" });
+  }
+};
+
+export const createSkillCategory = async (req: Request, res: Response) => {
+  try {
+    const { id, title, metric, description, visualizerType, displayOrder } = req.body;
+    
+    // Check if category ID exists
+    const existing = await SkillCategoryModel.findOne({ id });
+    if (existing) {
+      return res.status(400).json({ message: `Skill category with ID ${id} already exists.` });
+    }
+
+    const category = new SkillCategoryModel({
+      id,
+      title,
+      metric,
+      description,
+      visualizerType,
+      displayOrder: Number(displayOrder || 0),
+    });
+    await category.save();
+
+    await ActivityLog.create({
+      userId: req.user?.userId || null,
+      email: req.user?.userId ? "admin@example.com" : "unknown",
+      action: "CONTENT_CHANGE",
+      ipAddress: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "unknown",
+      details: `Created skill category: ${title} (${id})`,
+    });
+
+    return res.status(201).json(category);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message || "Server Error" });
+  }
+};
+
+export const updateSkillCategory = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params; // Using MongoDB _id
+    const category = await SkillCategoryModel.findByIdAndUpdate(id, req.body, { new: true });
+    if (!category) {
+      return res.status(404).json({ message: "Skill category not found." });
+    }
+
+    await ActivityLog.create({
+      userId: req.user?.userId || null,
+      email: req.user?.userId ? "admin@example.com" : "unknown",
+      action: "CONTENT_CHANGE",
+      ipAddress: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "unknown",
+      details: `Updated skill category: ${category.title}`,
+    });
+
+    return res.json(category);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message || "Server Error" });
+  }
+};
+
+export const deleteSkillCategory = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const category = await SkillCategoryModel.findByIdAndDelete(id);
+    if (!category) {
+      return res.status(404).json({ message: "Skill category not found." });
+    }
+
+    await ActivityLog.create({
+      userId: req.user?.userId || null,
+      email: req.user?.userId ? "admin@example.com" : "unknown",
+      action: "CONTENT_CHANGE",
+      ipAddress: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "unknown",
+      details: `Deleted skill category: ${category.title}`,
+    });
+
+    return res.json({ message: "Skill category deleted successfully." });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message || "Server Error" });
+  }
+};
+
+// =========================================================================
+// SHOWCASE / WALL OF FAME CRUD
+// =========================================================================
+
+export const getShowcase = async (req: Request, res: Response) => {
+  try {
+    const showcase = await Showcase.find().sort({ displayOrder: 1, createdAt: -1 });
+    return res.json(showcase);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message || "Server Error" });
+  }
+};
+
+export const getShowcaseById = async (req: Request, res: Response) => {
+  try {
+    const item = await Showcase.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: "Showcase item not found." });
+    }
+    return res.json(item);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message || "Server Error" });
+  }
+};
+
+export const createShowcase = async (req: Request, res: Response) => {
+  try {
+    const count = await Showcase.countDocuments();
+    const showcaseData = {
+      ...req.body,
+      displayOrder: count + 1,
+    };
+
+    const item = new Showcase(showcaseData);
+    await item.save();
+
+    await ActivityLog.create({
+      userId: req.user?.userId || null,
+      email: req.user?.userId ? "admin@example.com" : "unknown",
+      action: "CONTENT_CHANGE",
+      ipAddress: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "unknown",
+      details: `Created showcase item: ${item.title}`,
+    });
+
+    return res.status(201).json(item);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message || "Server Error" });
+  }
+};
+
+export const updateShowcase = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const item = await Showcase.findByIdAndUpdate(id, req.body, { new: true });
+    if (!item) {
+      return res.status(404).json({ message: "Showcase item not found." });
+    }
+
+    await ActivityLog.create({
+      userId: req.user?.userId || null,
+      email: req.user?.userId ? "admin@example.com" : "unknown",
+      action: "CONTENT_CHANGE",
+      ipAddress: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "unknown",
+      details: `Updated showcase item: ${item.title}`,
+    });
+
+    return res.json(item);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message || "Server Error" });
+  }
+};
+
+export const deleteShowcase = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const item = await Showcase.findByIdAndDelete(id);
+    if (!item) {
+      return res.status(404).json({ message: "Showcase item not found." });
+    }
+
+    await ActivityLog.create({
+      userId: req.user?.userId || null,
+      email: req.user?.userId ? "admin@example.com" : "unknown",
+      action: "CONTENT_CHANGE",
+      ipAddress: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "unknown",
+      details: `Deleted showcase item: ${item.title}`,
+    });
+
+    return res.json({ message: "Showcase item deleted successfully." });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message || "Server Error" });
+  }
+};
+

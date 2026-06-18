@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { Phone, Mail, Award, ArrowRight, Star } from "lucide-react";
 import { aboutData } from "@/data/about";
@@ -10,7 +9,7 @@ import { fetchAPI } from "@/lib/api";
 
 export default function AboutSection() {
   const [formattedDate, setFormattedDate] = useState("");
-  const [about, setAbout] = useState(aboutData);
+  const [about, setAbout] = useState({ ...aboutData, signatureUrl: "" });
   const [hero, setHero] = useState(heroData);
 
   // Dynamically set date on client-side to prevent hydration mismatches
@@ -49,6 +48,7 @@ export default function AboutSection() {
           aboutText: aboutRes.description || prev.aboutText,
           recruiterMessage: aboutRes.recruiterMessage || prev.recruiterMessage,
           signatureName: heroRes?.name || prev.signatureName,
+          signatureUrl: aboutRes.signatureUrl || "",
         }));
       }
 
@@ -206,12 +206,10 @@ export default function AboutSection() {
 
             {/* Profile Photo with rounded corners and rotating text badge */}
             <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-800 mb-8 max-w-sm self-center lg:self-start group">
-              <Image
+              <img
                 src={hero.image}
                 alt={hero.name}
-                fill
-                sizes="(max-w-768px) 100vw, 30vw"
-                className="object-cover grayscale hover:grayscale-0 transition-all duration-700 ease-out"
+                className="absolute inset-0 w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 ease-out"
               />
 
               {/* Rotating Circular Text Emblem overlay in bottom-right */}
@@ -247,9 +245,17 @@ export default function AboutSection() {
 
               {/* Handwritten signature section */}
               <div className="mt-8 pt-4 flex flex-col items-start gap-1">
-                <span className="font-signature text-4xl text-zinc-100 rotate-[-2deg] transform origin-left tracking-wide block py-2 select-none">
-                  {about.signatureName}
-                </span>
+                {about.signatureUrl ? (
+                  <img
+                    src={about.signatureUrl}
+                    alt="Signature"
+                    className="h-16 w-auto object-contain select-none max-w-[200px] brightness-125"
+                  />
+                ) : (
+                  <span className="font-signature text-4xl text-zinc-100 rotate-[-2deg] transform origin-left tracking-wide block py-2 select-none">
+                    {about.signatureName}
+                  </span>
+                )}
                 <span className="font-mono text-[10px] text-zinc-600 uppercase tracking-widest">
                   // {about.signatureName}
                 </span>

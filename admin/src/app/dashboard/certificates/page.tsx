@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "../../../utils/api";
-import { Loader2, Plus, Trash2, Edit, Save, Award, ExternalLink, X } from "lucide-react";
+import { Loader2, Plus, Trash2, Edit, Save, Award, ExternalLink, X, Upload } from "lucide-react";
+import { fileToBase64, compressImage, validateFileSize } from "../../../utils/file";
 
 interface CertificateItem {
   _id: string;
@@ -28,6 +29,36 @@ export default function CertificatesPage() {
   const [credentialUrl, setCredentialUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [displayOrder, setDisplayOrder] = useState(0);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!validateFileSize(file, 5)) {
+      alert("File size exceeds 5MB limit.");
+      return;
+    }
+    try {
+      const base64 = await compressImage(file, 400, 400, 0.85);
+      setImageUrl(base64);
+    } catch (err) {
+      console.error("Error converting file to base64:", err);
+    }
+  };
+
+  const handleCredentialFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!validateFileSize(file, 5)) {
+      alert("File size exceeds 5MB limit.");
+      return;
+    }
+    try {
+      const base64 = await fileToBase64(file);
+      setCredentialUrl(base64);
+    } catch (err) {
+      console.error("Error converting file to base64:", err);
+    }
+  };
 
   const fetchCertificates = async () => {
     try {
@@ -303,27 +334,75 @@ export default function CertificatesPage() {
             </div>
 
             {/* Credential URL */}
-            <div className="space-y-1.5">
-              <label className="block text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Credential Verification URL</label>
-              <input
-                type="text"
-                placeholder="https://..."
-                value={credentialUrl}
-                onChange={(e) => setCredentialUrl(e.target.value)}
-                className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-zinc-700 rounded-lg font-mono text-xs text-white outline-none"
-              />
+            <div className="space-y-1.5 font-mono">
+              <label className="block text-[10px] text-zinc-500 uppercase tracking-wider">Credential Verification URL / File</label>
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  placeholder="https://... or raw base64 data"
+                  value={credentialUrl}
+                  onChange={(e) => setCredentialUrl(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-zinc-700 rounded-lg text-xs text-white outline-none"
+                />
+                <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-750 text-zinc-300 hover:text-white px-3 py-1.5 rounded text-[10px] uppercase tracking-wider border border-zinc-700 inline-flex items-center gap-1.5">
+                  <Upload className="h-3 w-3" />
+                  <span>Upload PDF or Image</span>
+                  <input
+                    type="file"
+                    accept=".pdf,image/*"
+                    className="hidden"
+                    onChange={handleCredentialFileUpload}
+                  />
+                </label>
+              </div>
             </div>
 
             {/* Image URL */}
-            <div className="space-y-1.5">
-              <label className="block text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Badge Image URL (Optional)</label>
-              <input
-                type="text"
-                placeholder="https://..."
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-zinc-700 rounded-lg font-mono text-xs text-white outline-none"
-              />
+            <div className="space-y-1.5 font-mono">
+              <label className="block text-[10px] text-zinc-500 uppercase tracking-wider">Badge Image URL / Upload (Optional)</label>
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  placeholder="https://... or base64 data"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-zinc-700 rounded-lg text-xs text-white outline-none"
+                />
+                <div className="flex items-center gap-4">
+                  <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-750 text-zinc-300 hover:text-white px-3 py-1.5 rounded text-[10px] uppercase tracking-wider border border-zinc-700 inline-flex items-center gap-1.5">
+                    <Upload className="h-3 w-3" />
+                    <span>Upload from Gallery</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageUpload}
+                    />
+                  </label>
+                  {imageUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setImageUrl("")}
+                      className="text-red-500 hover:text-red-400 text-[9px] uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+                    >
+                      <X className="h-3 w-3" />
+                      Clear Image
+                    </button>
+                  )}
+                </div>
+                {imageUrl && (
+                  <div className="relative h-20 w-32 rounded-lg overflow-hidden border border-zinc-800 bg-zinc-950 flex items-center justify-center">
+                    <img
+                      src={imageUrl}
+                      alt="Badge preview"
+                      className="h-full w-full object-contain p-1"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = "none";
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Display Order */}
