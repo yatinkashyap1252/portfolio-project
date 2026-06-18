@@ -9,6 +9,7 @@ export interface ProjectItem {
   status: string;
   index: string;
   thumbnailUrl?: string;
+  visualizerType?: string;
 }
 
 export const projectsData: ProjectItem[] = [
