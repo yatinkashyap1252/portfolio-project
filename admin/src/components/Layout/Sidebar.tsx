@@ -16,6 +16,7 @@ import {
   History,
   Settings,
   Mail,
+  Sparkles,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -34,6 +35,7 @@ export default function Sidebar({ onLinkClick }: SidebarProps) {
     { name: "Experience", href: "/dashboard/experience", icon: Briefcase },
     { name: "Education", href: "/dashboard/education", icon: GraduationCap },
     { name: "Certificates", href: "/dashboard/certificates", icon: Award },
+    { name: "Showcase", href: "/dashboard/showcase", icon: Sparkles },
     { name: "Contact Info", href: "/dashboard/contact", icon: Mail },
     { name: "SEO Management", href: "/dashboard/seo", icon: Globe },
     { name: "Media Library", href: "/dashboard/media", icon: Image },

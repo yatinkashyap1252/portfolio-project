@@ -30,12 +30,12 @@ const aboutSchema = new Schema<IAbout>(
     },
     signatureUrl: {
       type: String,
-      required: true,
+      required: false,
       default: "",
     },
     recruiterMessage: {
       type: String,
-      required: true,
+      required: false,
       default: "",
     },
   },

@@ -6,8 +6,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter, useParams } from "next/navigation";
 import { apiFetch } from "../../../../../utils/api";
-import { Loader2, ArrowLeft, Save } from "lucide-react";
+import { Loader2, ArrowLeft, Save, Upload, X } from "lucide-react";
 import Link from "next/link";
+import { fileToBase64, compressImage, validateFileSize } from "../../../../../utils/file";
+
+const fileOrUrlSchema = z.string().refine((val) => {
+  if (val === "") return true;
+  if (val.startsWith("/") || val.startsWith("data:")) return true;
+  try {
+    new URL(val);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}, { message: "Must be a valid URL or uploaded file." });
 
 const projectSchema = z.object({
   title: z.string().min(2, { message: "Title must be at least 2 characters." }),
@@ -15,7 +27,7 @@ const projectSchema = z.object({
   techInput: z.string().min(2, { message: "Enter technologies separated by commas." }),
   githubUrl: z.string().url({ message: "Please enter a valid Github URL." }),
   liveUrl: z.string().url({ message: "Please enter a valid URL." }).or(z.literal("")),
-  thumbnailUrl: z.string().url({ message: "Please enter a valid URL." }).or(z.literal("")),
+  thumbnailUrl: fileOrUrlSchema,
   isFeatured: z.boolean(),
   isDraft: z.boolean(),
   displayOrder: z.number(),
@@ -36,6 +48,7 @@ export default function EditProjectPage() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -45,6 +58,23 @@ export default function EditProjectPage() {
       displayOrder: 0,
     },
   });
+
+  const thumbnailUrl = watch("thumbnailUrl");
+
+  const handleThumbnailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!validateFileSize(file, 5)) {
+      alert("File size exceeds 5MB limit.");
+      return;
+    }
+    try {
+      const base64 = await compressImage(file, 800, 600, 0.85);
+      setValue("thumbnailUrl", base64);
+    } catch (err) {
+      console.error("Error converting file to base64:", err);
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -195,17 +225,53 @@ export default function EditProjectPage() {
           </div>
 
           {/* Thumbnail URL */}
-          <div className="space-y-1.5">
-            <label className="block text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Thumbnail Image URL</label>
-            <input
-              type="text"
-              placeholder="https://..."
-              {...register("thumbnailUrl")}
-              className={`w-full px-4 py-2.5 bg-zinc-950 border rounded-lg font-mono text-xs text-white outline-none transition-all
-                ${errors.thumbnailUrl ? "border-red-900 focus:ring-1 focus:ring-red-900/50" : "border-zinc-800 focus:border-zinc-700"}
-              `}
-            />
-            {errors.thumbnailUrl && <p className="text-[9px] font-mono text-red-500 uppercase tracking-wider">{errors.thumbnailUrl.message}</p>}
+          <div className="space-y-1.5 font-mono">
+            <label className="block text-[10px] text-zinc-500 uppercase tracking-wider">Thumbnail Image</label>
+            <div className="space-y-2">
+              <input
+                type="text"
+                placeholder="URL or base64 data..."
+                {...register("thumbnailUrl")}
+                className={`w-full px-4 py-2.5 bg-zinc-950 border rounded-lg text-xs text-white outline-none transition-all
+                  ${errors.thumbnailUrl ? "border-red-900 focus:ring-1 focus:ring-red-900/50" : "border-zinc-800 focus:border-zinc-700"}
+                `}
+              />
+              <div className="flex items-center gap-4">
+                <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-750 text-zinc-300 hover:text-white px-3 py-1.5 rounded text-[10px] uppercase tracking-wider border border-zinc-700 inline-flex items-center gap-1.5">
+                  <Upload className="h-3 w-3" />
+                  <span>Upload from Gallery</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleThumbnailChange}
+                  />
+                </label>
+                {thumbnailUrl && (
+                  <button
+                    type="button"
+                    onClick={() => setValue("thumbnailUrl", "")}
+                    className="text-red-500 hover:text-red-400 text-[9px] uppercase tracking-wider flex items-center gap-1"
+                  >
+                    <X className="h-3 w-3" />
+                    Clear Image
+                  </button>
+                )}
+              </div>
+              {thumbnailUrl && (
+                <div className="relative h-20 w-32 rounded-lg overflow-hidden border border-zinc-800 bg-zinc-950 flex items-center justify-center">
+                  <img
+                    src={thumbnailUrl}
+                    alt="Thumbnail preview"
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = "none";
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+            {errors.thumbnailUrl && <p className="text-[9px] text-red-500 uppercase tracking-wider">{errors.thumbnailUrl.message}</p>}
           </div>
 
           {/* Display Order */}

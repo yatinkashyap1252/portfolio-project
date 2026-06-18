@@ -25,22 +25,22 @@ const heroSchema = new Schema<IHero>(
     },
     resumeUrl: {
       type: String,
-      required: true,
+      required: false,
       default: "",
     },
     profileImageUrl: {
       type: String,
-      required: true,
+      required: false,
       default: "",
     },
     githubUrl: {
       type: String,
-      required: true,
+      required: false,
       default: "",
     },
     linkedinUrl: {
       type: String,
-      required: true,
+      required: false,
       default: "",
     },
     email: {

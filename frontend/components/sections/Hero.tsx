@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { heroData } from "@/data/hero";
@@ -94,10 +93,15 @@ export default function Hero() {
             {/* Website Row */}
             <div className="space-y-2 group cursor-pointer">
               <div className="flex justify-between items-center">
-                <span className="text-zinc-500 font-bold">W</span>
-                <span className="text-white hover:text-red-500 transition-colors duration-200">
-                  {data.website}
-                </span>
+                <span className="text-zinc-500 font-bold">L</span>
+                <a
+                  href={data.website.startsWith("http") ? data.website : `https://${data.website}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-red-500 transition-colors duration-200"
+                >
+                  Linked in ↗
+                </a>
               </div>
               <motion.div
                 variants={lineVariants}
@@ -167,14 +171,10 @@ export default function Hero() {
 
         {/* RIGHT COLUMN: Profile Photo (Col Span 3) */}
         <div className="md:col-span-3 relative min-h-[400px] md:min-h-[500px] overflow-hidden border-t md:border-t-0 border-zinc-800">
-          <Image
+          <img
             src={data.image}
             alt={data.name}
-            fill
-            sizes="(max-w-768px) 100vw, 25vw"
-            priority={true}
-            loading="eager"
-            className="object-cover grayscale contrast-[1.15] brightness-[0.95] hover:grayscale-0 hover:scale-105 transition-all duration-700 ease-out"
+            className="absolute inset-0 w-full h-full object-cover grayscale contrast-[1.15] brightness-[0.95] hover:grayscale-0 hover:scale-105 transition-all duration-700 ease-out"
           />
           {/* Overlay to merge photo styled with border */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />

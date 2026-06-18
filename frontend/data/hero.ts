@@ -8,10 +8,10 @@ export interface HeroData {
 }
 
 export const heroData: HeroData = {
-  name: "Robert William",
-  role: "YOUR JOB POSITION",
-  website: "www.example.com",
-  email: "email@example.com",
-  phone: "000-000 0000",
+  name: "Yatin Kashyap",
+  role: "Python Developer Trainee",
+  website: "https://portfolio-3d-k48k.onrender.com",
+  email: "yatinkashyap1252@gmail.com",
+  phone: "+91 9924111787",
   image: "/portrait.png",
 };

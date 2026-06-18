@@ -21,8 +21,8 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  title: "Robert William | Portfolio",
-  description: "Personal Resume and Portfolio Website of Robert William",
+  title: "Yatin Kashyap | Portfolio",
+  description: "Personal Resume and Portfolio Website of Yatin Kashyap",
 };
 
 export default function RootLayout({

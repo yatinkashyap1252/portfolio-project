@@ -169,12 +169,9 @@ const AtomicVisualizer: React.FC<VisualizerProps> = ({ isHovered }) => {
 // 2. MAIN COMPONENT: PROJECTS SECTION
 // =========================================================================
 
-function getCoverId(title: string): string {
-  const lower = title.toLowerCase();
-  if (lower.includes("crypto") || lower.includes("neos")) return "neos-crypto";
-  if (lower.includes("gateway") || lower.includes("express") || lower.includes("microservice")) return "express-gateway";
-  if (lower.includes("atomic") || lower.includes("zustand") || lower.includes("orchestrator")) return "atomic-state";
-  return "neos-crypto"; // default fallback visualizer
+function getVisualizerTypeByIndex(idx: number): string {
+  const types = ["neos-crypto", "express-gateway", "atomic-state"];
+  return types[idx % types.length];
 }
 
 export default function ProjectsSection() {
@@ -212,7 +209,8 @@ export default function ProjectsSection() {
             }
 
             return {
-              id: getCoverId(p.title),
+              id: p._id || idx.toString(),
+              visualizerType: getVisualizerTypeByIndex(idx),
               title: p.title,
               description: cleanDesc,
               techStack: p.technologies || [],
@@ -221,6 +219,7 @@ export default function ProjectsSection() {
               liveUrl: p.liveUrl || null,
               status: p.isFeatured ? "FEATURED" : "ACTIVE",
               index: String(p.displayOrder || idx + 1).padStart(2, "0"),
+              thumbnailUrl: p.thumbnailUrl,
             };
           });
           setProjects(mapped);
@@ -277,6 +276,7 @@ export default function ProjectsSection() {
         <div className="flex flex-col">
           {projects.map((project, idx) => {
             const isHovered = hoveredCardId === project.id;
+            const visualizerType = project.visualizerType || getVisualizerTypeByIndex(idx);
 
             return (
               <motion.div
@@ -288,10 +288,10 @@ export default function ProjectsSection() {
               >
                 {/* Visual Cover (Col 5) */}
                 <div className="lg:col-span-5 p-6 md:p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-zinc-800 flex items-center justify-center relative bg-zinc-950/15 overflow-hidden">
-                  <div className="w-full aspect-video lg:aspect-auto lg:h-[340px] relative z-10">
-                    {project.id === "neos-crypto" && <CryptoVisualizer isHovered={isHovered} />}
-                    {project.id === "express-gateway" && <GatewayVisualizer isHovered={isHovered} />}
-                    {project.id === "atomic-state" && <AtomicVisualizer isHovered={isHovered} />}
+                  <div className="w-full aspect-video lg:aspect-auto lg:h-[340px] relative z-10 flex items-center justify-center">
+                    {visualizerType === "neos-crypto" && <CryptoVisualizer isHovered={isHovered} />}
+                    {visualizerType === "express-gateway" && <GatewayVisualizer isHovered={isHovered} />}
+                    {visualizerType === "atomic-state" && <AtomicVisualizer isHovered={isHovered} />}
                   </div>
 
                   {/* Giant floating diagonal arrow ↗ from reference screenshot */}

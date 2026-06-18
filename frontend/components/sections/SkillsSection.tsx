@@ -253,26 +253,50 @@ export default function SkillsSection() {
   const [categories, setCategories] = useState(skillCategories);
 
   useEffect(() => {
-    async function loadSkills() {
-      const skills = await fetchAPI<any[]>("/cms/skills");
-      if (skills && skills.length > 0) {
-        setCategories((prevCategories) =>
-          prevCategories.map((cat) => {
-            const filteredSkills = skills
-              .filter((s: any) => s.category === cat.id)
-              .sort((a: any, b: any) => a.displayOrder - b.displayOrder)
-              .map((s: any) => s.name);
+    async function loadSkillsAndCategories() {
+      try {
+        const categoriesRes = await fetchAPI<any[]>("/cms/categories");
+        const skillsRes = await fetchAPI<any[]>("/cms/skills");
 
-            // Only override if the database actually has skills in this category
-            return {
-              ...cat,
-              skills: filteredSkills.length > 0 ? filteredSkills : cat.skills,
-            };
-          })
-        );
+        let baseCategories = skillCategories; // default fallback
+
+        if (categoriesRes && categoriesRes.length > 0) {
+          // Sort categories by displayOrder
+          const sortedCategories = [...categoriesRes].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+          baseCategories = sortedCategories.map((cat) => ({
+            id: cat.id,
+            title: cat.title,
+            metric: cat.metric,
+            description: cat.description,
+            visualizerType: cat.visualizerType || "wave",
+            skills: [], // will populate below
+          }));
+        }
+
+        // Now map the skills into their categories
+        const skillsList = skillsRes || [];
+        const mappedCategories = baseCategories.map((cat) => {
+          const filteredSkills = skillsList
+            .filter((s: any) => s.category === cat.id)
+            .sort((a: any, b: any) => a.displayOrder - b.displayOrder)
+            .map((s: any) => s.name);
+
+          // Find fallback skills from static data if database has no skills for this category
+          const fallbackCat = skillCategories.find((c) => c.id === cat.id);
+          const fallbackSkills = fallbackCat ? fallbackCat.skills : [];
+
+          return {
+            ...cat,
+            skills: filteredSkills.length > 0 ? filteredSkills : fallbackSkills,
+          };
+        });
+
+        setCategories(mappedCategories);
+      } catch (err) {
+        console.error("Error loading categories and skills:", err);
       }
     }
-    loadSkills();
+    loadSkillsAndCategories();
   }, []);
 
   const containerVariants = {

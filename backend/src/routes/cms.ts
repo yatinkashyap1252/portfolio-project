@@ -42,8 +42,20 @@ import {
   // SEO
   getSEO,
   updateSEO,
+  // Skill Categories
+  getSkillCategories,
+  createSkillCategory,
+  updateSkillCategory,
+  deleteSkillCategory,
+  // Showcase
+  getShowcase,
+  getShowcaseById,
+  createShowcase,
+  updateShowcase,
+  deleteShowcase,
 } from "../controllers/cmsController";
 import { requireAuth } from "../middleware/auth";
+
 
 const router = Router();
 
@@ -100,4 +112,18 @@ router.put("/contact", requireAuth, updateContact);
 router.get("/seo", getSEO); // Public fetch available
 router.put("/seo", requireAuth, updateSEO);
 
+// Skill Categories CRUD
+router.get("/categories", getSkillCategories); // Public fetch available
+router.post("/categories", requireAuth, createSkillCategory);
+router.put("/categories/:id", requireAuth, updateSkillCategory);
+router.delete("/categories/:id", requireAuth, deleteSkillCategory);
+
+// Showcase CRUD
+router.get("/showcase", getShowcase); // Public fetch available
+router.get("/showcase/:id", getShowcaseById);
+router.post("/showcase", requireAuth, createShowcase);
+router.put("/showcase/:id", requireAuth, updateShowcase);
+router.delete("/showcase/:id", requireAuth, deleteShowcase);
+
 export default router;
+

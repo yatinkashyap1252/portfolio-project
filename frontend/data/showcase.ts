@@ -8,92 +8,103 @@ export interface ShowcaseItem {
   linkLabel: string;
   badgeText: string;
   bgStyle: "white" | "black" | "red" | "dark" | "split";
+  imageUrl?: string;
 }
 
 export const showcaseItems: ShowcaseItem[] = [
   {
-    id: "nextjs-cert",
+    id: "isro-internship",
     type: "certificate",
-    title: "Next.js Advanced Developer",
-    subtitle: "Vercel Professional Certification",
+    title: "The Agnirva Space Internship Program",
+    subtitle: "ISRO Recognized Internship Program",
     content: [
-      "Final Score: 97%",
-      "Verified skills in Server Components routing, state isolation, and bundle optimisations.",
-      "Credential ID: VRC-NX-9988"
+      "Successfully completed the Agnirva Space Internship Program focused on space technology, innovation, and research.",
+      "Gained exposure to real-world applications of aerospace and emerging technologies.",
+      "Recognized for active participation and project contributions."
     ],
-    link: "/nextjs-certificate.pdf", // Mock PDF
-    linkLabel: "View Certificate PDF",
-    badgeText: "NEXT.JS",
+    link: "https://www.linkedin.com/in/yatin-kashyap-96a7412b6/overlay/Certifications/1205639962/treasury/?profileId=ACoAAEvthCIB06mEdc6RR2hq_jNwRFPK5kTX5t4",
+    linkLabel: "View Certificate",
+    badgeText: "ISRO",
     bgStyle: "white",
   },
+
   {
-    id: "zustand-blog",
-    type: "blog",
-    title: "Mastering Zustand Atomic State",
-    subtitle: "Technical Blog Publication",
-    content: [
-      "A deep-dive tutorial explaining how atomic selectors prevent unnecessary re-render triggers in React forms.",
-      "Discusses state subscription optimizations and debugging flows."
-    ],
-    link: "https://medium.com/example/mastering-zustand-atomic-states",
-    linkLabel: "Read Article",
-    badgeText: "MEDIUM BLOG",
-    bgStyle: "black",
-  },
-  {
-    id: "aws-cert",
+    id: "google-ai",
     type: "certificate",
-    title: "AWS Certified Developer",
-    subtitle: "Amazon Web Services (Associate)",
+    title: "Google AI Workshop",
+    subtitle: "Artificial Intelligence & Generative AI",
     content: [
-      "Validating cloud deployment workflows, Serverless architectures (Lambda/API Gateway), and MongoDB/DynamoDB scalability parameters.",
-      "Verification ID: AWS-7733-DEV"
+      "Completed hands-on training covering AI fundamentals, machine learning concepts, and modern Generative AI workflows.",
+      "Explored practical AI applications and industry use cases.",
+      "Strengthened understanding of AI-powered product development."
     ],
-    link: "https://aws.amazon.com/verification",
-    linkLabel: "Verify Credential",
-    badgeText: "AWS CLOUD",
+    link: "https://www.linkedin.com/in/yatin-kashyap-96a7412b6/overlay/Certifications/358443216/treasury/?profileId=ACoAAEvthCIB06mEdc6RR2hq_jNwRFPK5kTX5t4",
+    linkLabel: "View Certificate",
+    badgeText: "GOOGLE AI",
     bgStyle: "split",
   },
+
   {
-    id: "oss-hackathon",
+    id: "hacknuthon",
     type: "extra-curricular",
-    title: "Open Source Champion",
-    subtitle: "Global React Hackathon 2025",
+    title: "HackNUthon 6.0 Semi-Finalist",
+    subtitle: "National Level Hackathon",
     content: [
-      "Awarded 1st place for designing a zero-dependency CLI typescript schema validation tool.",
-      "Collaborated in a team of 3 to package, document, and publish on npm in under 48 hours."
+      "Reached the Semi-Final round among numerous participating teams.",
+      "Collaborated in a competitive environment to build innovative solutions under strict deadlines.",
+      "Demonstrated problem-solving, teamwork, and rapid prototyping skills."
     ],
-    link: "https://github.com/example/hackathon-repo",
-    linkLabel: "View Repository",
-    badgeText: "AWARDS",
+    link: "https://www.linkedin.com/in/yatin-kashyap-96a7412b6/overlay/Certifications/482372370/treasury/?profileId=ACoAAEvthCIB06mEdc6RR2hq_jNwRFPK5kTX5t4",
+    linkLabel: "View Achievement",
+    badgeText: "HACKATHON",
     bgStyle: "dark",
   },
+
   {
-    id: "framer-sandbox",
-    type: "blog",
-    title: "Framer Motion Animations",
-    subtitle: "Interactive Animation Sandbox",
+    id: "sih-2024",
+    type: "extra-curricular",
+    title: "Smart India Hackathon 2024",
+    subtitle: "Government of India Innovation Initiative",
     content: [
-      "A creative sandbox showcasing custom Page Transitions, fluid SVG path morphs, and spring hover card triggers.",
-      "Includes code snippets copyable for direct integration."
+      "Participated in India's largest innovation competition.",
+      "Worked on real-world problem statements and solution development.",
+      "Collaborated with multidisciplinary teams to design scalable technology solutions."
     ],
-    link: "https://framer.com/showcase/example-motion",
-    linkLabel: "Inspect Sandbox",
-    badgeText: "SANDBOX",
+    link: "https://www.linkedin.com/in/yatin-kashyap-96a7412b6/overlay/Certifications/506709670/treasury/?profileId=ACoAAEvthCIB06mEdc6RR2hq_jNwRFPK5kTX5t4",
+    linkLabel: "View Details",
+    badgeText: "SIH 2024",
     bgStyle: "red",
   },
+
   {
-    id: "linkedin-rec",
+    id: "goodgame-lead",
     type: "highlight",
-    title: "Wall of Fame Highlights",
-    subtitle: "Lead Engineer Recommendation",
+    title: "UI/UX Team Leadership",
+    subtitle: "The GoodGame Theory",
     content: [
-      "\"Robert has a rare talent for balancing scale and structure with gorgeous, pixel-perfect user interface details. He completely overhauled our Next.js application speed.\"",
-      "— Team Lead, Studio Sunlight"
+      "Led a team of 5 designers while serving as UI/UX Intern and Team Lead.",
+      "Architected a centralized design system that reduced design-to-development rework by 20%.",
+      "Improved navigation efficiency through user-centered design and prototyping."
     ],
-    link: "https://linkedin.com/in/robert-william-dev",
-    linkLabel: "View LinkedIn Profile",
-    badgeText: "RECOMMENDATION",
+    link: "https://www.linkedin.com/in/yatin-kashyap-96a7412b6/overlay/Position/2690723839/treasury/?profileId=ACoAAEvthCIB06mEdc6RR2hq_jNwRFPK5kTX5t4",
+    linkLabel: "View Experience",
+    badgeText: "LEADERSHIP",
+    bgStyle: "black",
+  },
+
+  {
+    id: "surekha-odoo",
+    type: "highlight",
+    title: "Enterprise Odoo Development",
+    subtitle: "Surekha Technologies",
+    content: [
+      "Collaborated directly with clients to deliver customized ERP solutions.",
+      "Developed Python-based Odoo modules, XML views, and workflow automations.",
+      "Contributed to migration projects, PostgreSQL optimization, testing, and deployment."
+    ],
+    link: "https://www.linkedin.com/in/yatin-kashyap-96a7412b6/",
+    linkLabel: "View Experience",
+    badgeText: "PYTHON",
     bgStyle: "white",
   },
 ];

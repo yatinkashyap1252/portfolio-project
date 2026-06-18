@@ -58,7 +58,7 @@ export interface IAbout extends Document {
 
 export interface ISkill extends Document {
   name: string;
-  category: "frontend" | "backend" | "state" | "devops" | "other";
+  category: string;
   proficiency: number; // 0-100
   displayOrder: number;
   createdAt: Date;
@@ -142,3 +142,30 @@ export interface IMedia extends Document {
   folder: string;
   createdAt: Date;
 }
+
+export interface ISkillCategory extends Document {
+  id: string; // e.g. "frontend"
+  title: string;
+  metric: string;
+  description: string;
+  visualizerType: "wave" | "matrix" | "nodes" | "gauge";
+  displayOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IShowcase extends Document {
+  type: "certificate" | "blog" | "article" | "extra-curricular" | "highlight";
+  title: string;
+  subtitle: string;
+  content: string[];
+  link: string;
+  linkLabel: string;
+  badgeText: string;
+  bgStyle: "white" | "black" | "red" | "dark" | "split";
+  imageUrl?: string;
+  displayOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+

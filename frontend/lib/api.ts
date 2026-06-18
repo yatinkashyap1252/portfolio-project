@@ -8,6 +8,7 @@ export async function fetchAPI<T>(endpoint: string): Promise<T | null> {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: "GET",
+      cache: "no-store",
       // Fast timeout if server is completely offline (prevent long blank loading screens)
       signal: AbortSignal.timeout(4000), 
     });
