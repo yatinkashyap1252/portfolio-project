@@ -5,6 +5,14 @@ export interface ExperienceItem {
   description: string;
 }
 
+export interface EducationItem {
+  institution: string;
+  degree: string;
+  startDate: string;
+  endDate: string;
+  grade?: string;
+}
+
 export interface AwardItem {
   title: string;
   year: string;
@@ -22,6 +30,7 @@ export interface AboutData {
   signatureName: string;
   aboutText: string;
   experiences: ExperienceItem[];
+  education: EducationItem[];
   awards: AwardItem[];
   contact: ContactInfo;
 }
@@ -76,6 +85,15 @@ export const aboutData: AboutData = {
     {
       title: "Google AI Workshop Certification",
       year: "2025"
+    }
+  ],
+  education: [
+    {
+      institution: "University of Delhi",
+      degree: "B.Sc. in Computer Science",
+      startDate: "2022",
+      endDate: "2025",
+      grade: "First Class"
     }
   ],
 

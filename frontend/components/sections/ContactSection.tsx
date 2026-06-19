@@ -24,6 +24,7 @@ type ContactFormData = z.infer<typeof contactSchema>;
 
 export default function ContactSection() {
   const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [email, setEmail] = useState(heroData.email);
   const [resumeUrl, setResumeUrl] = useState("/resume.pdf");
 
@@ -55,11 +56,30 @@ export default function ContactSection() {
   });
 
   const onSubmit = async (data: ContactFormData) => {
-    // Simulating API latency
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log("Form Submitted Successfully:", data);
-    setIsSubmitSuccess(true);
-    reset();
+    setSubmitError(null);
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+      const response = await fetch(`${baseUrl}/cms/contact/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const resData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(resData.message || "Failed to send message.");
+      }
+
+      console.log("Form Submitted Successfully:", resData);
+      setIsSubmitSuccess(true);
+      reset();
+    } catch (err: any) {
+      console.error("Error submitting contact form:", err);
+      setSubmitError(err.message || "Failed to connect to backend server. Please verify if it is running.");
+    }
   };
 
   const containerVariants = {
@@ -246,6 +266,12 @@ export default function ContactSection() {
                     <p className="font-mono text-[9px] text-[#E63925] uppercase tracking-wider">{errors.message.message}</p>
                   )}
                 </div>
+
+                {submitError && (
+                  <p className="font-mono text-xs text-[#E63925] uppercase tracking-wider text-center border border-[#E63925]/30 bg-[#E63925]/5 py-2.5 rounded-lg">
+                    {submitError}
+                  </p>
+                )}
 
                 {/* Submit button */}
                 <button

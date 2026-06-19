@@ -29,6 +29,7 @@ export default function AboutSection() {
       const heroRes = await fetchAPI<any>("/cms/hero");
       const aboutRes = await fetchAPI<any>("/cms/about");
       const expRes = await fetchAPI<any[]>("/cms/experience");
+      const eduRes = await fetchAPI<any[]>("/cms/education");
       const certRes = await fetchAPI<any[]>("/cms/certificates");
       const contactRes = await fetchAPI<any>("/cms/contact");
 
@@ -62,6 +63,20 @@ export default function AboutSection() {
         setAbout((prev) => ({
           ...prev,
           experiences: mappedExp,
+        }));
+      }
+
+      if (eduRes && eduRes.length > 0) {
+        const mappedEdu = eduRes.map((edu: any) => ({
+          institution: edu.institution,
+          degree: edu.degree,
+          startDate: edu.startDate,
+          endDate: edu.endDate,
+          grade: edu.grade,
+        }));
+        setAbout((prev) => ({
+          ...prev,
+          education: mappedEdu,
         }));
       }
 
@@ -311,6 +326,43 @@ export default function AboutSection() {
                 ))}
               </div>
             </div>
+
+            {/* My Education Timeline */}
+            {about.education && about.education.length > 0 && (
+              <div className="space-y-6">
+                <h4 className="font-sans font-black text-base uppercase tracking-widest text-zinc-400 border-b border-zinc-900 pb-3 flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-[#E63925]" />
+                  My Education
+                </h4>
+                
+                <div className="space-y-8">
+                  {about.education.map((edu, idx) => (
+                    <div key={idx} className="grid grid-cols-1 md:grid-cols-12 gap-4 group">
+                      {/* Index Number */}
+                      <div className="md:col-span-2 font-mono text-3xl font-black text-zinc-800 group-hover:text-[#E63925] transition-colors leading-none">
+                        {String(idx + 1).padStart(2, "0")}
+                      </div>
+                      {/* Details */}
+                      <div className="md:col-span-10 space-y-2">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-1">
+                          <h5 className="font-sans font-extrabold text-zinc-200 group-hover:text-white transition-colors text-sm uppercase tracking-wider">
+                            {edu.degree} / <span className="text-zinc-400">{edu.institution}</span>
+                          </h5>
+                          <span className="font-mono text-xs text-zinc-500 tracking-wider">
+                            {edu.startDate} - {edu.endDate}
+                          </span>
+                        </div>
+                        {edu.grade && (
+                          <p className="text-zinc-400 text-xs md:text-sm leading-relaxed font-light">
+                            Grade: {edu.grade}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Contact Info List */}
             <div className="space-y-6">

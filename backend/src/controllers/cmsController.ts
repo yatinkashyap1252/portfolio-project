@@ -11,6 +11,8 @@ import { Contact } from "../models/Contact";
 import { SEO } from "../models/SEO";
 import { SkillCategoryModel } from "../models/SkillCategory";
 import { Showcase } from "../models/Showcase";
+import nodemailer from "nodemailer";
+
 
 
 // =========================================================================
@@ -781,6 +783,92 @@ export const updateContact = async (req: Request, res: Response) => {
     return res.json(item);
   } catch (error: any) {
     return res.status(500).json({ message: error.message || "Server Error" });
+  }
+};
+
+export const sendContactEmail = async (req: Request, res: Response) => {
+  try {
+    const { name, email, subject, message } = req.body;
+
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({ message: "All fields (name, email, subject, message) are required." });
+    }
+
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpPort = parseInt(process.env.SMTP_PORT || "587");
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+    const smtpSecure = process.env.SMTP_SECURE === "true";
+    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || smtpUser;
+
+    // Check if configuration exists
+    if (!smtpHost || !smtpUser || !smtpPass || smtpPass === "your-app-password") {
+      console.warn("SMTP email settings are not configured in environment variables. Simulating email submission...");
+      
+      // Save log in activity log
+      await ActivityLog.create({
+        userId: null,
+        email: "anonymous",
+        action: "CONTENT_CHANGE",
+        ipAddress: req.ip || "127.0.0.1",
+        userAgent: req.headers["user-agent"] || "unknown",
+        details: `Simulated contact message from ${name} (${email}): ${subject}`,
+      });
+
+      return res.json({
+        message: "Your message has been simulated successfully! (SMTP settings not configured on backend)",
+        simulated: true,
+      });
+    }
+
+    // Configure transport
+    const transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpSecure,
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+    });
+
+    const mailOptions = {
+      from: `"${name}" <${smtpUser}>`,
+      replyTo: email,
+      to: receiverEmail,
+      subject: `[Portfolio Contact] ${subject}`,
+      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+      html: `
+        <h3>New Portfolio Contact Form Submission</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <br/>
+        <p><strong>Message:</strong></p>
+        <div style="padding: 10px; background-color: #f5f5f5; border-left: 4px solid #E63925;">
+          ${message.replace(/\n/g, "<br/>")}
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    await ActivityLog.create({
+      userId: null,
+      email: "anonymous",
+      action: "CONTENT_CHANGE",
+      ipAddress: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "unknown",
+      details: `Contact email sent successfully from ${name} (${email}) to ${receiverEmail}`,
+    });
+
+    return res.json({
+      message: "Message sent successfully!",
+      simulated: false,
+    });
+  } catch (error: any) {
+    console.error("Error sending contact email via SMTP:", error);
+    return res.status(500).json({ message: error.message || "Failed to send email." });
   }
 };
 

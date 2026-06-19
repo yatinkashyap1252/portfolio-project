@@ -39,6 +39,7 @@ import {
   // Contact
   getContact,
   updateContact,
+  sendContactEmail,
   // SEO
   getSEO,
   updateSEO,
@@ -107,6 +108,7 @@ router.delete("/certificates/:id", requireAuth, deleteCertificate);
 // Contact CRUD
 router.get("/contact", getContact); // Public fetch available
 router.put("/contact", requireAuth, updateContact);
+router.post("/contact/send", sendContactEmail);
 
 // SEO CRUD
 router.get("/seo", getSEO); // Public fetch available
