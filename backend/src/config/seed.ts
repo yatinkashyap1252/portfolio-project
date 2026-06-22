@@ -268,11 +268,11 @@ export const seedDatabase = async () => {
     if (educationCount === 0) {
       console.log("Seeding Education...");
       await Education.create({
-        institution: "University of Delhi",
-        degree: "B.Sc. in Computer Science",
+        institution: "Vishwakarma Government Engineering College,GTU",
+        degree: "B.E. in Computer Engineering",
         startDate: "2022",
-        endDate: "2025",
-        grade: "First Class",
+        endDate: "2026",
+        grade: "Distinction (CGPA: 8.26)",
         displayOrder: 1,
       });
     }

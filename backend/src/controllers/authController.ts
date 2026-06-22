@@ -18,10 +18,11 @@ import {
 
 // Helper to set refresh token cookie
 const setRefreshCookie = (res: Response, token: string) => {
+  const isProd = process.env.NODE_ENV === "production";
   res.cookie("refreshToken", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: "/api/v1/auth", // only send to auth endpoints
   });
@@ -434,10 +435,11 @@ export const logout = async (req: Request, res: Response) => {
       }
     }
 
+    const isProd = process.env.NODE_ENV === "production";
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       path: "/api/v1/auth",
     });
 
@@ -461,10 +463,11 @@ export const logoutAll = async (req: Request, res: Response) => {
     user.refreshTokens = [];
     await user.save();
 
+    const isProd = process.env.NODE_ENV === "production";
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       path: "/api/v1/auth",
     });
 

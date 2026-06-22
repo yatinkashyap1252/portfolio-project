@@ -93,14 +93,14 @@ export default function Hero() {
             {/* Website Row */}
             <div className="space-y-2 group cursor-pointer">
               <div className="flex justify-between items-center">
-                <span className="text-zinc-500 font-bold">L</span>
+                <span className="text-zinc-500 font-bold">W</span>
                 <a
                   href={data.website.startsWith("http") ? data.website : `https://${data.website}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white hover:text-red-500 transition-colors duration-200"
                 >
-                  Linked in ↗
+                  Website ↗
                 </a>
               </div>
               <motion.div
