@@ -23,6 +23,7 @@ export interface ContactInfo {
   email: string;
   facebook: string;
   linkedin: string;
+  github: string;
 }
 
 export interface AboutData {
@@ -89,18 +90,19 @@ export const aboutData: AboutData = {
   ],
   education: [
     {
-      institution: "University of Delhi",
-      degree: "B.Sc. in Computer Science",
+      institution: "Vishwakarma Government Engineering College,GTU",
+      degree: "B.E. in Computer Engineering",
       startDate: "2022",
-      endDate: "2025",
-      grade: "First Class"
+      endDate: "2026",
+      grade: "Distinction (CGPA: 8.26)",
     }
   ],
 
   contact: {
     phone: "+91 9924111787 99999",
     email: "yatinkashyap1252@example.com",
-    facebook: "facebook.com",
-    linkedin: "https://www.linkedin.com/in/yatin-kashyap-96a7412b6/"
+    facebook: "https://x.com/YatinKashy60844",
+    linkedin: "https://www.linkedin.com/in/yatin-kashyap-96a7412b6/",
+    github: "https://github.com/yatinkashyap1252"
   }
 };
