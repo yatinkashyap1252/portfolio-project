@@ -15,19 +15,21 @@ export const seedDatabase = async () => {
     console.log("=== DB SEED CHECK ===");
 
     // Clean up old Robert William or previous placeholder seed to force re-seed with Yatin's real details
-    const [existingHero, existingAbout, projectCount] = await Promise.all([
+    const [existingHero, existingAbout, projectCount, bscEducation] = await Promise.all([
       Hero.findOne(),
       About.findOne(),
       Project.countDocuments(),
+      Education.findOne({ degree: /B\.?Sc/i }),
     ]);
     
     if (
       (existingHero && existingHero.name === "Robert William") ||
       (existingAbout && existingAbout.email === "robert@william.example.com") ||
       (existingAbout && existingAbout.email === "yatin@example.com") ||
-      (projectCount !== 4) // Force reseed if projects count is not equal to our 4 actual projects
+      (projectCount !== 4) || // Force reseed if projects count is not equal to our 4 actual projects
+      bscEducation // Force reseed if any old B.Sc. education entry exists
     ) {
-      console.log("Found default or previous placeholder seed data. Clearing database to force re-seed...");
+      console.log("Found default, stale, or previous B.Sc. placeholder seed data. Clearing database to force re-seed...");
       await Promise.all([
         Hero.deleteMany({}),
         About.deleteMany({}),
