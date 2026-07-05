@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     creator: "@YatinKashy60844",
   },
   verification: {
-    google: "GOOGLE_SEARCH_CONSOLE_PLACEHOLDER",
+    google: "0m_W4FxkynMMgWMtNsA6IAv5dqv40xYLXbUmaC9EMqg",
   },
 };
 
