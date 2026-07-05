@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/_next/", "/static/"],
     },
-    sitemap: "https://portfolio-3d-k48k.onrender.com/sitemap.xml",
+    sitemap: "https://yatin-portfolio.vercel.app/sitemap.xml",
   };
 }

@@ -27,7 +27,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://portfolio-3d-k48k.onrender.com"),
+  metadataBase: new URL("https://yatin-portfolio.vercel.app"),
   title: {
     default: "Yatin Kashyap | Full Stack Developer Portfolio",
     template: "%s | Yatin Kashyap",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     "Portfolio",
     "Resume",
   ],
-  authors: [{ name: "Yatin Kashyap", url: "https://portfolio-3d-k48k.onrender.com" }],
+  authors: [{ name: "Yatin Kashyap", url: "https://yatin-portfolio.vercel.app" }],
   creator: "Yatin Kashyap",
   alternates: {
     canonical: "/",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Yatin Kashyap | Full Stack Developer Portfolio",
     description: "Personal Resume and Portfolio Website of Yatin Kashyap. Full Stack Developer specializing in React, Next.js, Python, and scalable web solutions.",
-    url: "https://portfolio-3d-k48k.onrender.com",
+    url: "https://yatin-portfolio.vercel.app",
     siteName: "Yatin Kashyap Portfolio",
     images: [
       {
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     creator: "@YatinKashy60844",
   },
   verification: {
-    google: "GOOGLE_SEARCH_CONSOLE_PLACEHOLDER",
+    google: "0m_W4FxkynMMgWMtNsA6IAv5dqv40xYLXbUmaC9EMqg",
   },
 };
 
@@ -98,11 +98,11 @@ export default function RootLayout({
     "@graph": [
       {
         "@type": "Person",
-        "@id": "https://portfolio-3d-k48k.onrender.com/#person",
+        "@id": "https://yatin-portfolio.vercel.app/#person",
         "name": "Yatin Kashyap",
         "jobTitle": "Full Stack Developer",
-        "url": "https://portfolio-3d-k48k.onrender.com",
-        "image": "https://portfolio-3d-k48k.onrender.com/portrait.png",
+        "url": "https://yatin-portfolio.vercel.app",
+        "image": "https://yatin-portfolio.vercel.app/portrait.png",
         "email": "yatinkashyap1252@gmail.com",
         "telephone": "+91 9924111787",
         "sameAs": [
@@ -121,82 +121,82 @@ export default function RootLayout({
       },
       {
         "@type": "WebSite",
-        "@id": "https://portfolio-3d-k48k.onrender.com/#website",
-        "url": "https://portfolio-3d-k48k.onrender.com",
+        "@id": "https://yatin-portfolio.vercel.app/#website",
+        "url": "https://yatin-portfolio.vercel.app",
         "name": "Yatin Kashyap | Portfolio",
         "description": "Personal Resume and Portfolio Website of Yatin Kashyap",
         "publisher": {
-          "@id": "https://portfolio-3d-k48k.onrender.com/#person",
+          "@id": "https://yatin-portfolio.vercel.app/#person",
         },
       },
       {
         "@type": "CreativeWork",
-        "@id": "https://portfolio-3d-k48k.onrender.com/#project-globepath",
+        "@id": "https://yatin-portfolio.vercel.app/#project-globepath",
         "name": "GlobePath Travel Platform",
         "description": "A comprehensive travel planning and booking platform designed to help users discover destinations, manage itineraries, and streamline trip organization.",
         "creator": {
-          "@id": "https://portfolio-3d-k48k.onrender.com/#person",
+          "@id": "https://yatin-portfolio.vercel.app/#person",
         },
         "codeRepository": "https://github.com/yatinkashyap1252/globepath",
       },
       {
         "@type": "CreativeWork",
-        "@id": "https://portfolio-3d-k48k.onrender.com/#project-safargo",
+        "@id": "https://yatin-portfolio.vercel.app/#project-safargo",
         "name": "Safargo - Cab Booking",
         "description": "A logistics and transportation management solution focused on shipment tracking, operational monitoring, and business workflow automation.",
         "creator": {
-          "@id": "https://portfolio-3d-k48k.onrender.com/#person",
+          "@id": "https://yatin-portfolio.vercel.app/#person",
         },
         "codeRepository": "https://github.com/yatinkashyap1252/SafarGo",
       },
       {
         "@type": "CreativeWork",
-        "@id": "https://portfolio-3d-k48k.onrender.com/#project-pixelfox",
+        "@id": "https://yatin-portfolio.vercel.app/#project-pixelfox",
         "name": "Pixel Fox Maze Adventure",
         "description": "A 2D adventure maze game featuring interactive gameplay mechanics, obstacle navigation, collectible systems, and engaging pixel-art environments.",
         "creator": {
-          "@id": "https://portfolio-3d-k48k.onrender.com/#person",
+          "@id": "https://yatin-portfolio.vercel.app/#person",
         },
         "codeRepository": "https://github.com/yatinkashyap1252/Pixel_Maze_Adventure",
       },
       {
         "@type": "CreativeWork",
-        "@id": "https://portfolio-3d-k48k.onrender.com/#project-blindassistant",
+        "@id": "https://yatin-portfolio.vercel.app/#project-blindassistant",
         "name": "AI Blind Assistant System",
         "description": "An AI-powered accessibility solution that assists visually impaired individuals through real-time object detection, voice guidance, and environmental awareness features.",
         "creator": {
-          "@id": "https://portfolio-3d-k48k.onrender.com/#person",
+          "@id": "https://yatin-portfolio.vercel.app/#person",
         },
         "codeRepository": "https://github.com/yatinkashyap1252/blind_assistant_bot",
       },
       {
         "@type": "WebApplication",
-        "@id": "https://portfolio-3d-k48k.onrender.com/#project-medclinic",
+        "@id": "https://yatin-portfolio.vercel.app/#project-medclinic",
         "name": "Premium Medical Clinic",
         "description": "An MNC-grade, premium medical clinic presentation dashboard with fluid scroll animations, interactive appointment forms, team bios, and custom FAQs.",
         "creator": {
-          "@id": "https://portfolio-3d-k48k.onrender.com/#person",
+          "@id": "https://yatin-portfolio.vercel.app/#person",
         },
         "url": "https://premium-med-clinic.vercel.app",
       },
       {
         "@type": "SoftwareApplication",
-        "@id": "https://portfolio-3d-k48k.onrender.com/#project-detectivekiller",
+        "@id": "https://yatin-portfolio.vercel.app/#project-detectivekiller",
         "name": "Detective Killer Game",
         "description": "A rich text-adventure mystery game that puts players in the shoes of a detective. Navigate branching choices, inspect evidence logs, construct suspect testimonies, and solve complex cases.",
         "creator": {
-          "@id": "https://portfolio-3d-k48k.onrender.com/#person",
+          "@id": "https://yatin-portfolio.vercel.app/#person",
         },
         "url": "https://detective-killer-game.onrender.com",
         "applicationCategory": "Game",
       },
       {
         "@type": "WebApplication",
-        "@id": "https://portfolio-3d-k48k.onrender.com/#project-fitprogym",
+        "@id": "https://yatin-portfolio.vercel.app/#project-fitprogym",
         "name": "FitPro Gym Suite",
         "description": "A high-fidelity premium dark-themed fitness dashboard tracking active boxing sessions, pulse counts, and bento-style metric indicators with silky-smooth micro-animations.",
         "creator": {
-          "@id": "https://portfolio-3d-k48k.onrender.com/#person",
+          "@id": "https://yatin-portfolio.vercel.app/#person",
         },
         "url": "https://fitpro-gym-app.vercel.app",
       },
