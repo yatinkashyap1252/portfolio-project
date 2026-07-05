@@ -267,7 +267,7 @@ export default function ProjectsSection() {
           </h2>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <span className="font-mono text-xs text-[#E63925] uppercase tracking-[0.4em] font-bold">
-              // WORK DIRECTORY
+              SECTION 04 / WORK DIRECTORY
             </span>
           </div>
         </div>

@@ -132,7 +132,7 @@ export default function ContactSection() {
           <motion.div variants={itemVariants} className="space-y-6 relative z-10 pl-0 xl:pl-6">
             <div className="w-16 h-3 bg-white" />
             <span className="font-mono text-xs text-[#E63925] tracking-widest font-bold block uppercase">
-              SECTION 05 / GET IN TOUCH
+              SECTION 07 / GET IN TOUCH
             </span>
             <h2 className="text-3xl md:text-5xl font-sans font-black tracking-tight uppercase leading-[1.05]">
               Leave A <br /> Message.

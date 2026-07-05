@@ -174,6 +174,8 @@ export default function Hero() {
           <img
             src={data.image}
             alt={data.name}
+            loading="eager"
+            fetchPriority="high"
             className="absolute inset-0 w-full h-full object-cover grayscale contrast-[1.15] brightness-[0.95] hover:grayscale-0 hover:scale-105 transition-all duration-700 ease-out"
           />
           {/* Overlay to merge photo styled with border */}
