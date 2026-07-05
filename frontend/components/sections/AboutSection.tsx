@@ -254,6 +254,7 @@ export default function AboutSection() {
               <img
                 src={hero.image}
                 alt={hero.name}
+                loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 ease-out"
               />
 
@@ -294,6 +295,7 @@ export default function AboutSection() {
                   <img
                     src={about.signatureUrl}
                     alt="Signature"
+                    loading="lazy"
                     className="h-16 w-auto object-contain select-none max-w-[200px] brightness-125"
                   />
                 ) : (

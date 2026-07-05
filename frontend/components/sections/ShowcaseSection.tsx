@@ -94,7 +94,7 @@ export default function ShowcaseSection() {
         <div className="grid grid-cols-12 border-b border-zinc-800 p-8 md:p-12 items-center">
           <div className="col-span-12 md:col-span-6 space-y-3">
             <span className="font-mono text-xs text-[#E63925] tracking-widest font-bold block uppercase">
-              SECTION 04 / BRAG SHEET
+              SECTION 06 / BRAG SHEET
             </span>
             <h2 className="text-3xl md:text-5xl font-sans font-black tracking-tight uppercase">
               Wall of Fame
