@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+  
+  /* Brand/Primary: Luxury Deep Sage Teal & Emerald */
+  --color-brand-50: #f4f8f6;
+  --color-brand-100: #e2ede8;
+  --color-brand-200: #c6dbd2;
+  --color-brand-500: #1f4e3d;
+  --color-brand-600: #183e30;
+  --color-brand-700: #122e24;
+  --color-brand-800: #0c2018;
+  --color-brand-950: #06110d;
+
+  /* Accent/Warmth: Champagne Gold */
+  --color-accent-50: #fcfaf7;
+  --color-accent-100: #f7f1e7;
+  --color-accent-200: #ebe0cf;
+  --color-accent-500: #c2a378;
+  --color-accent-600: #ad8f65;
+  --color-accent-700: #8c714d;
+
+  /* Muted Luxury Slate */
+  --color-slate-luxury-50: #f8fafc;
+  --color-slate-luxury-900: #0f172a;
+}
+
+/* Custom Base Adjustments for Premium Feel */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-slate-luxury-900);
+  background-color: var(--color-accent-50);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-accent-50);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-200);
+  border-radius: 5px;
+  border: 2px solid var(--color-accent-50);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-500);
+}
+
+::selection {
+  background-color: var(--color-brand-100);
+  color: var(--color-brand-700);
+}
+
+/* Elegant glassmorphism class */
+.glass-nav {
+  background: rgba(252, 250, 247, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(31, 78, 61, 0.06);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(31, 78, 61, 0.05);
+}
+
+/* Form input custom style */
+.input-premium {
+  @apply w-full px-4 py-3 rounded-lg border border-brand-100 bg-white/70 text-slate-luxury-900 focus:outline-hidden focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all duration-300;
+}
+
+.input-premium-with-icon {
+  @apply w-full pl-12 pr-4 py-3 rounded-lg border border-brand-100 bg-white/70 text-slate-luxury-900 focus:outline-hidden focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all duration-300;
+}
