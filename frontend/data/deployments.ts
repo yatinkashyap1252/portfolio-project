@@ -24,8 +24,8 @@ export const deploymentsData: DeploymentItem[] = [
       "High-performance bento grid layout displaying clinic services and medical facilities.",
       "Silky-smooth entrance transitions and scrolling triggers designed with Framer Motion."
     ],
-    mockUrl: "premium-med-clinic.vercel.app",
-    previewUrl: "https://premium-med-clinic.vercel.app/",
+    mockUrl: "portfolio-project-coral-five.vercel.app",
+    previewUrl: "https://portfolio-project-coral-five.vercel.app/",
     index: "01",
     badgeText: "NEXTJS PORTAL",
   },

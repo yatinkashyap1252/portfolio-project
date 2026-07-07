@@ -177,7 +177,7 @@ export default function RootLayout({
         "creator": {
           "@id": "https://yatin-portfolio.vercel.app/#person",
         },
-        "url": "https://premium-med-clinic.vercel.app",
+        "url": "https://portfolio-project-coral-five.vercel.app/",
       },
       {
         "@type": "WebApplication",
