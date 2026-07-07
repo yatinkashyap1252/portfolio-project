@@ -31,36 +31,36 @@ export const deploymentsData: DeploymentItem[] = [
   },
   {
     id: "zentro-shop",
-    title: "Zentro E-Commerce Showcase",
-    subtitle: "Modern Product & Shop Landing Experience",
-    description: "A premium interactive e-commerce and product catalog experience showcasing custom sizing, real-time discounting banners, and high-fidelity fluid card layouts.",
-    techStack: ["Framer", "React", "Tailwind CSS", "E-Commerce Design", "Responsive Layout"],
+    title: "Corona",
+    subtitle: "3D Modeling, Animation & Framer Prototyping",
+    description: "A premium interactive e-commerce storefront showcasing advanced skills in 3D modeling, interactive web animation, and high-fidelity prototyping. Features real-time responsive design and embedded interactive 3D assets.",
+    techStack: ["Framer Prototyping", "Spline 3D", "3D Modeling", "Interactive Animation", "Web UI Design"],
     features: [
-      "Dynamic discount and coupon banners for conversion rate optimization.",
-      "Interactive product selection including custom sizes (XS-XL) and sneaker sizing charts.",
-      "Clean modern bento-style design showcase of premium items.",
-      "Fully responsive layout scaling across mobile, tablet, and desktop views."
+      "Embeds interactive 3D product viewports (using Spline) allowing users to rotate, orbit, and zoom products.",
+      "Custom UI control overlays for size selection (36-40, XS-XL) and live product color customizer switching.",
+      "Polished modern typography, high-contrast dark visual aesthetics, and structured grid cards.",
+      "Fully responsive viewport scaling and interactive states built directly as a high-fidelity Framer prototype."
     ],
     mockUrl: "smaller-founders-314097.framer.app",
     previewUrl: "https://smaller-founders-314097.framer.app/",
     index: "02",
-    badgeText: "FRAMER STORE",
+    badgeText: "3D FRAMER SHOP",
   },
   {
     id: "kinetic-motion",
     title: "Kinetic Motion Engine",
-    subtitle: "Interactive Trajectory & Flow Visualizer",
-    description: "A physics-inspired creative developer landing experience visualizing kinetic transformations, flow automation, and high-performance physics-based micro-interactions.",
-    techStack: ["Framer Motion", "Physics Sandbox", "CSS Keyframes", "Creative Coding", "SVG Path Animation"],
+    subtitle: "3D Spline Physics & Framer Prototyping",
+    description: "A physics-inspired creative landing experience visualizing kinetic transformations and flow automation by combining custom Spline 3D physics simulations with high-fidelity Framer interaction design.",
+    techStack: ["Framer Prototyping", "Spline 3D", "3D Animation", "Physics Simulation", "Creative Coding"],
     features: [
-      "Stunning kinetic drop and fluid-simulation entrance triggers.",
-      "Interactive speed and trajectory data indicators (e.g. entry/exit metrics).",
-      "Premium dark mode aesthetic featuring glowing grid patterns and glassmorphic panels.",
-      "Smooth scrolling timeline triggers mapping potential energy to kinetic motion."
+      "Integrates a real-time Spline 3D kinetic pipe simulation showing physics-based particle transitions.",
+      "Dynamic data overlays visualizing real-time metrics like Entry Speed (6.26 m/s) and Exit Speed.",
+      "Polished split-pane layout design with high-contrast text and smooth scrolling triggers.",
+      "Fully responsive interactive landing page developed directly as a high-fidelity Framer showcase."
     ],
     mockUrl: "expanded-course-024994.framer.app",
     previewUrl: "https://expanded-course-024994.framer.app/",
     index: "03",
-    badgeText: "KINETIC SITE",
+    badgeText: "3D SPLINE ENGINE",
   }
 ];

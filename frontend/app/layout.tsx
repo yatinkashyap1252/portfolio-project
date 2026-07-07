@@ -182,8 +182,8 @@ export default function RootLayout({
       {
         "@type": "WebApplication",
         "@id": "https://yatin-portfolio.vercel.app/#project-zentroshop",
-        "name": "Zentro E-Commerce Showcase",
-        "description": "A premium interactive e-commerce and product catalog experience showcasing custom sizing, real-time discounting banners, and high-fidelity fluid card layouts.",
+        "name": "Corona",
+        "description": "A premium interactive e-commerce storefront showcasing advanced skills in 3D modeling, interactive web animation, and high-fidelity prototyping. Features real-time responsive design and embedded interactive 3D assets.",
         "creator": {
           "@id": "https://yatin-portfolio.vercel.app/#person",
         },
@@ -193,7 +193,7 @@ export default function RootLayout({
         "@type": "WebApplication",
         "@id": "https://yatin-portfolio.vercel.app/#project-kineticmotion",
         "name": "Kinetic Motion Engine",
-        "description": "A physics-inspired creative developer landing experience visualizing kinetic transformations, flow automation, and high-performance physics-based micro-interactions.",
+        "description": "A physics-inspired creative landing experience visualizing kinetic transformations and flow automation by combining custom Spline 3D physics simulations with high-fidelity Framer interaction design.",
         "creator": {
           "@id": "https://yatin-portfolio.vercel.app/#person",
         },
