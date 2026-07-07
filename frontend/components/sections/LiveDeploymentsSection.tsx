@@ -22,6 +22,26 @@ export default function LiveDeploymentsSection() {
 
   const currentItem = deploymentsData[currentIndex];
 
+  const [containerDimensions, setContainerDimensions] = useState({ width: 0, height: 0 });
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setContainerDimensions({ width: rect.width, height: rect.height });
+      }
+    };
+    updateDimensions();
+    const timer = setTimeout(updateDimensions, 100);
+    window.addEventListener("resize", updateDimensions);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      clearTimeout(timer);
+    };
+  }, [currentIndex]);
+
   const handleNext = () => {
     setIsInteractive(false);
     setCurrentIndex((prev) => (prev + 1) % deploymentsData.length);
@@ -130,11 +150,32 @@ export default function LiveDeploymentsSection() {
               </div>
 
               {/* Iframe content container */}
-              <div className="bg-[#0D0D0D] relative flex-grow min-h-[360px] lg:h-[420px] w-full overflow-hidden">
+              <div 
+                ref={containerRef}
+                className="bg-[#0D0D0D] relative flex-grow min-h-[360px] lg:h-[420px] w-full overflow-hidden"
+              >
                 <iframe
                   key={iframeKey}
                   src={currentItem.previewUrl}
-                  className={`w-full h-full border-none transition-all duration-300 bg-zinc-950 ${
+                  style={
+                    currentItem.id === "kinetic-motion" && containerDimensions.width
+                      ? {
+                          width: "1440px",
+                          height: `${containerDimensions.height / (containerDimensions.width / 1440)}px`,
+                          transform: `scale(${containerDimensions.width / 1440})`,
+                          transformOrigin: "top left",
+                          border: "none",
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                        }
+                      : {
+                          width: "100%",
+                          height: "100%",
+                          border: "none",
+                        }
+                  }
+                  className={`transition-all duration-300 bg-zinc-950 ${
                     isInteractive ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-85 blur-[0.5px]"
                   }`}
                   title={currentItem.title}
