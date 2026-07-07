@@ -62,5 +62,22 @@ export const deploymentsData: DeploymentItem[] = [
     previewUrl: "https://expanded-course-024994.framer.app/",
     index: "03",
     badgeText: "3D SPLINE ENGINE",
+  },
+  {
+    id: "pixel-fox-blog",
+    title: "Pixel Fox Maze Publication",
+    subtitle: "Computer Vision & Python Technical Write-up",
+    description: "A comprehensive technical publication and step-by-step architectural breakdown of building a 2D interactive maze game powered by computer vision, color tracking, and Pygame framework capabilities.",
+    techStack: ["Python", "OpenCV", "Pygame", "Computer Vision", "Technical Writing"],
+    features: [
+      "Walks through real-time HSV color thresholding, masking, and dynamic contour tracking algorithms.",
+      "Details Pygame game loop execution cycle, event handling, and coordinate mapping.",
+      "Discusses camera calibration, gameplay boundaries, obstacle systems, and pixel-art rendering.",
+      "Interactive reader layout optimized for direct in-browser publication reading."
+    ],
+    mockUrl: "medium.com/building-pixel-fox-maze-adventure",
+    previewUrl: "https://medium.com/@yatinkashyap1252/building-pixel-fox-maze-adventure-a-color-tracking-maze-game-with-python-opencv-and-pygame-7ab204f5d456",
+    index: "04",
+    badgeText: "TECHNICAL BLOG",
   }
 ];

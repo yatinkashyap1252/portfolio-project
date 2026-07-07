@@ -154,36 +154,70 @@ export default function LiveDeploymentsSection() {
                 ref={containerRef}
                 className="bg-[#0D0D0D] relative flex-grow min-h-[360px] lg:h-[420px] w-full overflow-hidden"
               >
-                <iframe
-                  key={iframeKey}
-                  src={currentItem.previewUrl}
-                  style={
-                    currentItem.id === "kinetic-motion" && containerDimensions.width
-                      ? {
-                          width: "1440px",
-                          height: `${containerDimensions.height / (containerDimensions.width / 1440)}px`,
-                          transform: `scale(${containerDimensions.width / 1440})`,
-                          transformOrigin: "top left",
-                          border: "none",
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                        }
-                      : {
-                          width: "100%",
-                          height: "100%",
-                          border: "none",
-                        }
-                  }
-                  className={`transition-all duration-300 bg-zinc-950 ${
-                    isInteractive ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-85 blur-[0.5px]"
-                  }`}
-                  title={currentItem.title}
-                />
+                {currentItem.id === "pixel-fox-blog" ? (
+                  /* Image Preview for Blog post with Click-to-Open Medium link */
+                  <a
+                    href={currentItem.previewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 block group/blog overflow-hidden bg-[#0A0A0A] focus:outline-none cursor-pointer"
+                  >
+                    <img
+                      src="/pixel-fox-cover.png"
+                      alt="Pixel Fox Maze Adventure Blog Cover"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover/blog:scale-105"
+                    />
+                    
+                    {/* Hover glassmorphic overlay */}
+                    <div className="absolute inset-0 bg-black/40 group-hover/blog:bg-black/60 transition-colors duration-300 flex flex-col items-center justify-center text-center p-6 gap-3">
+                      <div className="h-14 w-14 rounded-full bg-black/60 border border-white/20 backdrop-blur-md flex items-center justify-center text-white group-hover/blog:bg-[#E63925] group-hover/blog:border-[#E63925] group-hover/blog:scale-110 transition-all duration-300 shadow-2xl">
+                        <ExternalLink className="h-5 w-5" />
+                      </div>
+                      <div className="space-y-1">
+                        <span className="font-mono text-[9px] uppercase tracking-widest text-[#E63925] font-bold bg-[#E63925]/10 border border-[#E63925]/20 px-2 py-0.5 rounded">
+                          TECHNICAL BLOG
+                        </span>
+                        <h4 className="font-sans font-bold text-sm tracking-tight text-white pt-1">
+                          Read on Medium
+                        </h4>
+                        <p className="text-zinc-400 font-mono text-[9px] uppercase tracking-wide">
+                          medium.com/@yatinkashyap1252
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                ) : (
+                  <iframe
+                    key={iframeKey}
+                    src={currentItem.previewUrl}
+                    style={
+                      currentItem.id === "kinetic-motion" && containerDimensions.width
+                        ? {
+                            width: "1440px",
+                            height: `${containerDimensions.height / (containerDimensions.width / 1440)}px`,
+                            transform: `scale(${containerDimensions.width / 1440})`,
+                            transformOrigin: "top left",
+                            border: "none",
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                          }
+                        : {
+                            width: "100%",
+                            height: "100%",
+                            border: "none",
+                          }
+                    }
+                    className={`transition-all duration-300 bg-zinc-950 ${
+                      isInteractive ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-85 blur-[0.5px]"
+                    }`}
+                    title={currentItem.title}
+                  />
+                )}
 
                 {/* Translucent overlay for Tap-To-Interact */}
                 <AnimatePresence>
-                  {!isInteractive && (
+                  {!isInteractive && currentItem.id !== "pixel-fox-blog" && (
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -209,7 +243,7 @@ export default function LiveDeploymentsSection() {
                 </AnimatePresence>
 
                 {/* Floating "Exit Interactive Mode" button when interactive */}
-                {isInteractive && (
+                {isInteractive && currentItem.id !== "pixel-fox-blog" && (
                   <div className="absolute bottom-4 right-4 z-20">
                     <button
                       onClick={() => setIsInteractive(false)}

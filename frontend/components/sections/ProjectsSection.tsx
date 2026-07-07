@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, ExternalLink, Cpu, HardDrive, Share2 } from "lucide-react";
+import { ArrowUpRight, ExternalLink, Cpu, HardDrive, Share2, FileText } from "lucide-react";
 import { projectsData, ProjectItem } from "@/data/projects";
 import { fetchAPI } from "@/lib/api";
 
@@ -220,6 +220,7 @@ export default function ProjectsSection() {
               status: p.isFeatured ? "FEATURED" : "ACTIVE",
               index: String(p.displayOrder || idx + 1).padStart(2, "0"),
               thumbnailUrl: p.thumbnailUrl,
+              articleUrl: p.articleUrl || projectsData.find(pd => pd.id === (p._id || p.id) || pd.title === p.title)?.articleUrl || null,
             };
           });
           setProjects(mapped);
@@ -376,6 +377,18 @@ export default function ProjectsSection() {
                           className="inline-flex items-center gap-2 px-4 py-2 font-mono text-[10px] uppercase tracking-wider bg-[#E63925] text-white rounded-lg hover:bg-[#F34D3A] transition-all duration-200 shadow-md shadow-[#E63925]/10"
                         >
                           <ExternalLink className="h-3.5 w-3.5" /> Deploy Link
+                        </a>
+                      )}
+
+                      {/* CONDITIONAL Medium/Article Link Button */}
+                      {project.articleUrl && (
+                        <a
+                          href={project.articleUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 font-mono text-[10px] uppercase tracking-wider bg-zinc-900 text-zinc-300 border border-zinc-800 rounded-lg hover:border-zinc-700 hover:text-white transition-all duration-200"
+                        >
+                          <FileText className="h-3.5 w-3.5" /> Read Article
                         </a>
                       )}
                     </div>

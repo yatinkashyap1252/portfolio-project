@@ -10,6 +10,7 @@ export interface ProjectItem {
   index: string;
   thumbnailUrl?: string;
   visualizerType?: string;
+  articleUrl?: string;
 }
 
 export const projectsData: ProjectItem[] = [
@@ -76,6 +77,7 @@ export const projectsData: ProjectItem[] = [
     liveUrl: null,
     status: "COMPLETED",
     index: "03",
+    articleUrl: "https://medium.com/@yatinkashyap1252/building-pixel-fox-maze-adventure-a-color-tracking-maze-game-with-python-opencv-and-pygame-7ab204f5d456",
   },
 
   {
