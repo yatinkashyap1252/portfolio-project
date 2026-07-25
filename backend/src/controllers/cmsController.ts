@@ -13,6 +13,45 @@ import { SkillCategoryModel } from "../models/SkillCategory";
 import { Showcase } from "../models/Showcase";
 import nodemailer from "nodemailer";
 
+// Helper to construct mail transporter resilient to cloud hosting provider firewall limits (Render)
+const createMailTransporter = () => {
+  const smtpHost = process.env.SMTP_HOST;
+  const smtpPort = parseInt(process.env.SMTP_PORT || "587");
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+  const smtpSecure = process.env.SMTP_SECURE === "true";
+  const smtpService = process.env.SMTP_SERVICE;
+
+  const transportOpts: any = {
+    auth: {
+      user: smtpUser,
+      pass: smtpPass,
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+  };
+
+  if (smtpService) {
+    transportOpts.service = smtpService;
+  } else if (smtpHost === "smtp.gmail.com") {
+    if (smtpPort === 465 || smtpSecure) {
+      transportOpts.host = smtpHost;
+      transportOpts.port = 465;
+      transportOpts.secure = true;
+    } else {
+      transportOpts.service = "gmail";
+    }
+  } else {
+    transportOpts.host = smtpHost;
+    transportOpts.port = smtpPort;
+    transportOpts.secure = smtpSecure;
+  }
+
+  return nodemailer.createTransport(transportOpts);
+};
+
+
 
 
 // =========================================================================
@@ -822,15 +861,7 @@ export const sendContactEmail = async (req: Request, res: Response) => {
     }
 
     // Configure transport
-    const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: smtpPort,
-      secure: smtpSecure,
-      auth: {
-        user: smtpUser,
-        pass: smtpPass,
-      },
-    });
+    const transporter = createMailTransporter();
 
     const mailOptions = {
       from: `"${name}" <${smtpUser}>`,
@@ -1110,6 +1141,146 @@ export const deleteShowcase = async (req: Request, res: Response) => {
     return res.json({ message: "Showcase item deleted successfully." });
   } catch (error: any) {
     return res.status(500).json({ message: error.message || "Server Error" });
+  }
+};
+
+export const trackVisit = async (req: Request, res: Response) => {
+  try {
+    const { referrer, language, screenResolution } = req.body;
+
+    // 1. Extract IP Address
+    let ip = (req.headers["x-forwarded-for"] as string || "").split(",")[0].trim() || req.ip || req.socket.remoteAddress || "127.0.0.1";
+    if (ip === "::1" || ip === "::ffff:127.0.0.1") {
+      ip = "127.0.0.1";
+    }
+
+    const userAgent = req.headers["user-agent"] || "unknown";
+    
+    // 2. Fetch approximate location details if it's not a local IP
+    let geoInfo: any = null;
+    const isLocal = ip === "127.0.0.1" || ip.startsWith("192.168.") || ip.startsWith("10.") || ip.startsWith("172.16.");
+    
+    if (!isLocal) {
+      try {
+        // Query ip-api.com (timeout of 3 seconds)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        
+        const geoRes = await fetch(`http://ip-api.com/json/${ip}`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        
+        if (geoRes.ok) {
+          const data = await geoRes.json() as any;
+          if (data && data.status === "success") {
+            geoInfo = data;
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching geo details for IP:", ip, err);
+      }
+    }
+
+    // 3. Construct description/details for DB
+    const locationString = geoInfo 
+      ? `${geoInfo.city}, ${geoInfo.regionName}, ${geoInfo.country}` 
+      : (isLocal ? "Localhost / Private Network" : "Unknown Location");
+      
+    const logDetails = `Portfolio visited. Location: ${locationString}. Referrer: ${referrer || "Direct"}. Language: ${language || "unknown"}. Resolution: ${screenResolution || "unknown"}.`;
+
+    // 4. Log in the database ActivityLog
+    await ActivityLog.create({
+      userId: null,
+      email: "anonymous",
+      action: "PORTFOLIO_VISIT",
+      ipAddress: ip,
+      userAgent: userAgent,
+      details: logDetails,
+    });
+
+    // 5. Send SMTP email notification
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpPort = parseInt(process.env.SMTP_PORT || "587");
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+    const smtpSecure = process.env.SMTP_SECURE === "true";
+    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || smtpUser;
+
+    // Only attempt to send email if configured and not local IP
+    if (smtpHost && smtpUser && smtpPass && smtpPass !== "your-app-password") {
+      const transporter = createMailTransporter();
+
+      const mailSubject = `[Portfolio Visit] New Visitor from ${locationString}`;
+      
+      const geoHtml = geoInfo ? `
+        <p><strong>Country:</strong> ${geoInfo.country} (${geoInfo.countryCode})</p>
+        <p><strong>Region/State:</strong> ${geoInfo.regionName}</p>
+        <p><strong>City:</strong> ${geoInfo.city}</p>
+        <p><strong>Timezone:</strong> ${geoInfo.timezone}</p>
+        <p><strong>ISP:</strong> ${geoInfo.isp}</p>
+        <p><strong>Org/AS:</strong> ${geoInfo.org || geoInfo.as || "N/A"}</p>
+        <p><strong>Coordinates:</strong> ${geoInfo.lat}, ${geoInfo.lon}</p>
+      ` : `<p><em>No geo-location information retrieved (either Localhost IP or Geo-IP Service was unavailable).</em></p>`;
+
+      const mailOptions = {
+        from: `"Portfolio Tracker" <${smtpUser}>`,
+        to: receiverEmail,
+        subject: mailSubject,
+        text: `New Portfolio Visit Details:\n\n` +
+              `IP Address: ${ip}\n` +
+              `Location: ${locationString}\n` +
+              `Referrer: ${referrer || "Direct"}\n` +
+              `Language: ${language || "N/A"}\n` +
+              `Resolution: ${screenResolution || "N/A"}\n` +
+              `User Agent: ${userAgent}\n` +
+              `Date/Time: ${new Date().toLocaleString()}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; border: 1px solid #e0e0e0; border-radius: 8px;">
+            <h2 style="color: #E63925; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-top: 0;">🌐 New Portfolio Visit</h2>
+            
+            <p>Somebody has just opened your portfolio website. Here are their connection details:</p>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+              <tr style="background-color: #f9fafb;">
+                <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #f3f4f6; width: 35%;">IP Address</td>
+                <td style="padding: 8px; border-bottom: 1px solid #f3f4f6; font-family: monospace;">${ip}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #f3f4f6;">Referrer</td>
+                <td style="padding: 8px; border-bottom: 1px solid #f3f4f6; color: #b45309;">${referrer || "Direct / Bookmark"}</td>
+              </tr>
+              <tr style="background-color: #f9fafb;">
+                <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #f3f4f6;">Language</td>
+                <td style="padding: 8px; border-bottom: 1px solid #f3f4f6;">${language || "N/A"}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #f3f4f6;">Screen Resolution</td>
+                <td style="padding: 8px; border-bottom: 1px solid #f3f4f6;">${screenResolution || "N/A"}</td>
+              </tr>
+              <tr style="background-color: #f9fafb;">
+                <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #f3f4f6;">User Agent</td>
+                <td style="padding: 8px; border-bottom: 1px solid #f3f4f6; font-size: 12px; color: #4b5563;">${userAgent}</td>
+              </tr>
+            </table>
+
+            <h3 style="color: #E63925; border-bottom: 1px solid #e0e0e0; padding-bottom: 5px; margin-top: 25px;">📍 Geolocation Details</h3>
+            ${geoHtml}
+
+            <div style="margin-top: 30px; font-size: 11px; color: #9ca3af; text-align: center; border-top: 1px solid #e0e0e0; padding-top: 10px;">
+              Sent automatically by Portfolio CMS Server. Time: ${new Date().toUTCString()}
+            </div>
+          </div>
+        `,
+      };
+
+      await transporter.sendMail(mailOptions);
+    } else {
+      console.warn("SMTP email settings are not configured in environment variables. Skipped sending email for visit.");
+    }
+
+    return res.json({ success: true, message: "Visit logged successfully." });
+  } catch (error: any) {
+    console.error("Error logging portfolio visit:", error);
+    return res.status(500).json({ message: error.message || "Failed to log visit" });
   }
 };
 
