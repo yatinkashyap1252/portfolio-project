@@ -12,6 +12,8 @@ import { SEO } from "../models/SEO";
 import { SkillCategoryModel } from "../models/SkillCategory";
 import { Showcase } from "../models/Showcase";
 import nodemailer from "nodemailer";
+import { renderContactEmail, renderVisitEmail } from "../utils/emailTemplates";
+
 
 // Helper to construct mail transporter resilient to cloud hosting provider firewall limits (Render)
 const createMailTransporter = () => {
@@ -842,6 +844,9 @@ export const sendContactEmail = async (req: Request, res: Response) => {
     // 1. Try Resend HTTP API if key exists (Resend uses HTTPS port 443, which bypasses all SMTP port blocks on Render)
     if (resendApiKey) {
       try {
+        const clientIp = req.ip || "127.0.0.1";
+        const emailHtml = renderContactEmail({ name, email, subject, message, ip: clientIp });
+
         const resendRes = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: {
@@ -853,7 +858,7 @@ export const sendContactEmail = async (req: Request, res: Response) => {
             to: [receiverEmail],
             reply_to: email,
             subject: `[Portfolio Contact] ${subject}`,
-            html: `<h3>New Portfolio Message</h3><p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Subject:</strong> ${subject}</p><br/><p><strong>Message:</strong></p><div style="padding: 10px; background-color: #f5f5f5; border-left: 4px solid #E63925;">${message.replace(/\n/g, "<br/>")}</div>`,
+            html: emailHtml,
           }),
         });
 
@@ -862,7 +867,7 @@ export const sendContactEmail = async (req: Request, res: Response) => {
             userId: null,
             email: "anonymous",
             action: "CONTENT_CHANGE",
-            ipAddress: req.ip || "127.0.0.1",
+            ipAddress: clientIp,
             userAgent: req.headers["user-agent"] || "unknown",
             details: `Contact email sent via Resend API from ${name} (${email})`,
           });
@@ -877,24 +882,17 @@ export const sendContactEmail = async (req: Request, res: Response) => {
     // 2. Try Nodemailer SMTP if credentials are set
     if (smtpHost && smtpUser && smtpPass && smtpPass !== "your-app-password") {
       try {
+        const clientIp = req.ip || "127.0.0.1";
         const transporter = createMailTransporter();
+        const emailHtml = renderContactEmail({ name, email, subject, message, ip: clientIp });
+        
         const mailOptions = {
           from: `"${name}" <${smtpUser}>`,
           replyTo: email,
           to: receiverEmail,
           subject: `[Portfolio Contact] ${subject}`,
           text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-          html: `
-            <h3>New Portfolio Contact Form Submission</h3>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Subject:</strong> ${subject}</p>
-            <br/>
-            <p><strong>Message:</strong></p>
-            <div style="padding: 10px; background-color: #f5f5f5; border-left: 4px solid #E63925;">
-              ${message.replace(/\n/g, "<br/>")}
-            </div>
-          `,
+          html: emailHtml,
         };
 
         await transporter.sendMail(mailOptions);
@@ -1244,29 +1242,55 @@ export const trackVisit = async (req: Request, res: Response) => {
       details: logDetails,
     });
 
-    // 5. Send SMTP email notification
+    // 5. Send email notification (Resend API first, falling back to SMTP if not available)
+    const resendApiKey = process.env.RESEND_API_KEY;
     const smtpHost = process.env.SMTP_HOST;
-    const smtpPort = parseInt(process.env.SMTP_PORT || "587");
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
-    const smtpSecure = process.env.SMTP_SECURE === "true";
-    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || smtpUser;
+    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || smtpUser || "yatinkashyap1252@gmail.com";
 
-    // Only attempt to send email if configured and not local IP
-    if (smtpHost && smtpUser && smtpPass && smtpPass !== "your-app-password") {
+    if (resendApiKey) {
+      try {
+        const mailSubject = `[Portfolio Visit] New Visitor from ${locationString}`;
+        const visitHtml = renderVisitEmail({
+          ip,
+          locationString,
+          referrer,
+          language,
+          screenResolution,
+          userAgent,
+          geoInfo,
+        });
+
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${resendApiKey}`,
+          },
+          body: JSON.stringify({
+            from: "Portfolio Tracker <onboarding@resend.dev>",
+            to: [receiverEmail],
+            subject: mailSubject,
+            html: visitHtml,
+          }),
+        });
+      } catch (visitEmailErr: any) {
+        console.warn("Resend email notification for visit failed:", visitEmailErr.message);
+      }
+    } else if (smtpHost && smtpUser && smtpPass && smtpPass !== "your-app-password") {
       const transporter = createMailTransporter();
 
       const mailSubject = `[Portfolio Visit] New Visitor from ${locationString}`;
-      
-      const geoHtml = geoInfo ? `
-        <p><strong>Country:</strong> ${geoInfo.country} (${geoInfo.countryCode})</p>
-        <p><strong>Region/State:</strong> ${geoInfo.regionName}</p>
-        <p><strong>City:</strong> ${geoInfo.city}</p>
-        <p><strong>Timezone:</strong> ${geoInfo.timezone}</p>
-        <p><strong>ISP:</strong> ${geoInfo.isp}</p>
-        <p><strong>Org/AS:</strong> ${geoInfo.org || geoInfo.as || "N/A"}</p>
-        <p><strong>Coordinates:</strong> ${geoInfo.lat}, ${geoInfo.lon}</p>
-      ` : `<p><em>No geo-location information retrieved (either Localhost IP or Geo-IP Service was unavailable).</em></p>`;
+      const visitHtml = renderVisitEmail({
+        ip,
+        locationString,
+        referrer,
+        language,
+        screenResolution,
+        userAgent,
+        geoInfo,
+      });
 
       const mailOptions = {
         from: `"Portfolio Tracker" <${smtpUser}>`,
@@ -1280,43 +1304,7 @@ export const trackVisit = async (req: Request, res: Response) => {
               `Resolution: ${screenResolution || "N/A"}\n` +
               `User Agent: ${userAgent}\n` +
               `Date/Time: ${new Date().toLocaleString()}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; border: 1px solid #e0e0e0; border-radius: 8px;">
-            <h2 style="color: #E63925; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-top: 0;">🌐 New Portfolio Visit</h2>
-            
-            <p>Somebody has just opened your portfolio website. Here are their connection details:</p>
-            
-            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-              <tr style="background-color: #f9fafb;">
-                <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #f3f4f6; width: 35%;">IP Address</td>
-                <td style="padding: 8px; border-bottom: 1px solid #f3f4f6; font-family: monospace;">${ip}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #f3f4f6;">Referrer</td>
-                <td style="padding: 8px; border-bottom: 1px solid #f3f4f6; color: #b45309;">${referrer || "Direct / Bookmark"}</td>
-              </tr>
-              <tr style="background-color: #f9fafb;">
-                <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #f3f4f6;">Language</td>
-                <td style="padding: 8px; border-bottom: 1px solid #f3f4f6;">${language || "N/A"}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #f3f4f6;">Screen Resolution</td>
-                <td style="padding: 8px; border-bottom: 1px solid #f3f4f6;">${screenResolution || "N/A"}</td>
-              </tr>
-              <tr style="background-color: #f9fafb;">
-                <td style="padding: 8px; font-weight: bold; border-bottom: 1px solid #f3f4f6;">User Agent</td>
-                <td style="padding: 8px; border-bottom: 1px solid #f3f4f6; font-size: 12px; color: #4b5563;">${userAgent}</td>
-              </tr>
-            </table>
-
-            <h3 style="color: #E63925; border-bottom: 1px solid #e0e0e0; padding-bottom: 5px; margin-top: 25px;">📍 Geolocation Details</h3>
-            ${geoHtml}
-
-            <div style="margin-top: 30px; font-size: 11px; color: #9ca3af; text-align: center; border-top: 1px solid #e0e0e0; padding-top: 10px;">
-              Sent automatically by Portfolio CMS Server. Time: ${new Date().toUTCString()}
-            </div>
-          </div>
-        `,
+        html: visitHtml,
       };
 
       try {
@@ -1327,6 +1315,7 @@ export const trackVisit = async (req: Request, res: Response) => {
     } else {
       console.warn("SMTP email settings are not configured in environment variables. Skipped sending email for visit.");
     }
+
 
     return res.json({ success: true, message: "Visit logged successfully." });
   } catch (error: any) {
