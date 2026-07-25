@@ -69,9 +69,18 @@ The project is structured as a multi-package repository separating concerns acro
   * **Audit Trail Logs**: Captures admin login attempts (success/failure), 2FA state changes, data mutations, and uploads, recording IP addresses and client user agents.
   * **Defensive Middleware**: Integrates `helmet` headers, strict body limits (10MB maximum for media uploads), custom MongoDB injection filters, and cross-site scripting (XSS) sanitizers.
 
+### 6. Resilient Email Engine & Visitor Analytics (`backend`)
+* **What**: Sends high-fidelity notifications for form entries and logs real-time visitor sessions directly to your inbox.
+* **How**:
+  * **API-based Email (Resend API)**: Bypasses cloud host port firewalls (like Render's default SMTP blocks) by defaulting to the **Resend HTTP API (Port 443)** when `RESEND_API_KEY` is provided. Falls back to Nodemailer SMTP when not.
+  * **Visitor Insights**: An active tracker catches IP addresses, location metrics (city, region, country, coordinates, ISP via Geo-IP service), language settings, screen resolutions, and referrer URLs.
+  * **Premium Theme Templates**: Renders responses using a beautiful dark-mode HTML email design system carrying signature crimson accents matching your portfolio theme.
+  * **DB Fallback**: If email delivery fails entirely, the message is stored inside the database audit logs (`ActivityLog`) under the prefix `[SAVED MSG]` to ensure no contact submissions are ever lost.
+
 ---
 
 ## 🛠️ Architectural Decisions ("Why")
+
 
 | Rationale Point | Decision | Why is it there? |
 | :--- | :--- | :--- |
@@ -126,7 +135,9 @@ Configure configuration variables in respective directories:
   SMTP_USER=your_email_user
   SMTP_PASS=your_email_password
   CONTACT_RECEIVER_EMAIL=your_inbox@gmail.com
+  RESEND_API_KEY=your_resend_api_key_here
   ```
+
 
 * **`frontend/.env.local`**:
   ```ini
