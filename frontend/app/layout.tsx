@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Mono, Space_Grotesk, Caveat } from "next/font/google";
 import "./globals.css";
+import VisitTracker from "@/components/common/VisitTracker";
 
 const spaceMono = Space_Mono({
   variable: "--font-space-mono",
@@ -222,7 +223,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <VisitTracker />
+      </body>
     </html>
   );
 }

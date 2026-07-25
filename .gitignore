@@ -34,3 +34,7 @@ yarn-error.log*
 .DS_Store
 *.pem
 *.tsbuildinfo
+
+# Local untracked apps
+fitpro_gym_app/
+

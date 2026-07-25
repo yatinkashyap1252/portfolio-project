@@ -307,7 +307,7 @@ export default function ContactSection() {
                     MESSAGE RECEIVED
                   </h3>
                   <p className="text-zinc-400 text-xs md:text-sm max-w-sm leading-relaxed font-light">
-                    Thank you for reaching out! Your email has been simulated and processed. I will review your message and reply shortly.
+                    Thank you for reaching out! Your message has been sent successfully. I will review your message and reply shortly.
                   </p>
                 </div>
 

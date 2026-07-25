@@ -23,7 +23,7 @@ export interface IUser extends Document {
 export interface IActivityLog extends Document {
   userId: string | null;
   email: string;
-  action: "LOGIN_SUCCESS" | "LOGIN_FAILED" | "2FA_VERIFIED" | "2FA_FAILED" | "CONTENT_CHANGE" | "FILE_UPLOAD" | "FILE_DELETE" | "LOGOUT";
+  action: "LOGIN_SUCCESS" | "LOGIN_FAILED" | "2FA_VERIFIED" | "2FA_FAILED" | "CONTENT_CHANGE" | "FILE_UPLOAD" | "FILE_DELETE" | "LOGOUT" | "PORTFOLIO_VISIT";
   ipAddress: string;
   userAgent: string;
   details: string;

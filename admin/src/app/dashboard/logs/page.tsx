@@ -70,6 +70,8 @@ export default function LogsPage() {
         return <span className="px-2 py-0.5 rounded text-[9px] font-mono bg-cyan-950/50 text-cyan-400 border border-cyan-900/45">UPLOAD</span>;
       case "LOGOUT":
         return <span className="px-2 py-0.5 rounded text-[9px] font-mono bg-zinc-800 text-zinc-400 border border-zinc-750">LOGOUT</span>;
+      case "PORTFOLIO_VISIT":
+        return <span className="px-2 py-0.5 rounded text-[9px] font-mono bg-purple-950/50 text-purple-400 border border-purple-900/45">VISIT</span>;
       default:
         return <span className="px-2 py-0.5 rounded text-[9px] font-mono bg-zinc-850 text-zinc-300">{action}</span>;
     }

@@ -25,6 +25,7 @@ const activityLogSchema = new Schema<IActivityLog>(
         "FILE_UPLOAD",
         "FILE_DELETE",
         "LOGOUT",
+        "PORTFOLIO_VISIT",
       ],
     },
     ipAddress: {
